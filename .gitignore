@@ -22,4 +22,6 @@ coverage.xml
 # Django stuff:
 *.log
 
+# Project stuff:
+.env
 sandbox/
