@@ -1,0 +1,14 @@
+<!DOCTYPE html>{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hall of Justice Data</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body>
+    <div id="wrapper">{% block content %}{% endblock content %}
+    </div>
+</body>
+</html>

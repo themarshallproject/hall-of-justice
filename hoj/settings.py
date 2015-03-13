@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'haystack',
+
     'cjdata',
 )
 
@@ -82,4 +84,23 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'hoj/static'),
+)
+
+# Templates
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'hoj/templates'),
+)
+
+# Haystack configuration
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
+        'INDEX_NAME': 'hall_of_justice'
+    },
+}
 
