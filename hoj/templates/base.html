@@ -1,14 +1,32 @@
-<!DOCTYPE html>{% load static %}
-<html>
+<!doctype html>{% load static %}
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Hall of Justice Data</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
-    {% block extra_head %}{% endblock extra_head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hall of Justice</title>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
+    <style type="text/css" media="screen">
+        table {
+            width: 100%;
+        }
+    </style>
+    {% block extrahead %}{% endblock extrahead %}
 </head>
+
 <body>
-    <div id="wrapper">{% block content %}{% endblock content %}
+    <div class="container">
+        <div class="row">
+            <div class="columns large-12">{% block content %}{% endblock %}</div>
+        </div>
     </div>
+
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/foundation.min.js" %}"></script>
+    <script>
+    $(document).foundation();
+    </script>
 </body>
+
 </html>

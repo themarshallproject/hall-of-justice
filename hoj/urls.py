@@ -4,7 +4,7 @@ from django.conf import settings
 
 urlpatterns = patterns('',
 
-    (r'^search/', include('haystack.urls')),
+    (r'^$', include('haystack.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 )

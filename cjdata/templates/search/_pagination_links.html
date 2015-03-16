@@ -1,0 +1,22 @@
+{% if paginator %}
+    <ul class="pagination">
+        <li>
+            {{ paginator.count }} results
+        </li>
+        <li class="arrow {% if not page.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page.has_previous %}?q={{ query }}&amp;page=1{% endif %}
+        {% endspaceless %}
+        ">&laquo; First</a></li>
+        <li class="arrow {% if not page.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page.has_previous %}?q={{ query }}&amp;page={{ page.previous_page_number }}{% endif %}
+        {% endspaceless %}
+        ">&lsaquo; Previous</a></li>
+        <li class="arrow {% if not page.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page.has_next %}?q={{ query }}&amp;page={{ page.next_page_number }}{% endif %}
+        {% endspaceless %}">Next &rsaquo;</a></li>
+        <li class="arrow {% if not page.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page.has_next %}?q={{ query }}&amp;page={{ page.paginator.num_pages }}{% endif %}
+        {% endspaceless %}">Last &raquo;</a></li>
+
+    </ul>
+{% endif %}
