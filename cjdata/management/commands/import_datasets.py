@@ -33,7 +33,7 @@ class Command(LabelCommand):
 
         def fix_states(item):
             if 'state' in item:
-                value = item.get('state', '')
+                value = item.pop('state', '')
                 values_list = value.split(",")
                 for n, v in enumerate(values_list):
                     if v.startswith('Nat'):
@@ -41,6 +41,7 @@ class Command(LabelCommand):
                     elif len(v) > 2:
                         v = None
                     values_list[n] = v
+                item['states'] = values_list
 
         def standardize_key(k):
             '''Many fields can be fixed by lowercasing and replacing certain characters'''
@@ -119,5 +120,7 @@ class Command(LabelCommand):
                                 self.stderr.write("Failed to save dataset:\n\t{}".format(str(e)))
                         if dataset:
                             self.stdout.write("Created Dataset: {}\n".format(dataset))
+                    else:
+                        self.stderr.write("Not enough data to create a dataset!")
         else:
             self.stderr.write('File does not exist at path: {}'.format(label))
