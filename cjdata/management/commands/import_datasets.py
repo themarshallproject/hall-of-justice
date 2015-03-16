@@ -31,7 +31,7 @@ class Command(LabelCommand):
                 value = item.pop(old_key, None)
                 if value:
                     if new_key in array_fields:
-                        value = value.split(",")
+                        value = [v.strip() for v in value.split(",")]
                     item[new_key] = value
 
         def standardize_key(k):
@@ -80,22 +80,22 @@ class Command(LabelCommand):
                         top_cat_name = top_cat_name.title()
                         try:
                             top_cat = Category.objects.get(name__iexact=top_cat_name, parent__isnull=True)
-                            print("Found '{}' category".format(top_cat_name))
+                            self.stdout.write("Found '{}' category".format(top_cat_name))
                             cat_obj = top_cat
                         except Category.MultipleObjectsReturned:
-                            print("Multiple category matches for {}".format(top_cat_name))
+                            self.stderr.write("Multiple category matches for {}".format(top_cat_name))
                         except Category.DoesNotExist:
-                            print("No '{}' category".format(top_cat_name))
+                            self.stderr.write("No '{}' category".format(top_cat_name))
                         if sub_cat_name:
                             sub_cat_name = sub_cat_name.title()
                             cat_path = "{}/{}".format(top_cat_name, sub_cat_name)
                             try:
                                 cat_obj = Category.objects.get(name__iexact=sub_cat_name, parent=top_cat)
-                                print("Found '{}' subcategory".format(top_cat_name))
+                                self.stdout.write("Found '{}' subcategory".format(top_cat_name))
                             except Category.MultipleObjectsReturned:
-                                print("Multiple subcategory matches for {}".format(cat_path))
+                                self.stderr.write("Multiple subcategory matches for {}".format(cat_path))
                             except Category.DoesNotExist:
-                                print("No '{}' category.".format(cat_path))
+                                self.stderr.write("No '{}' category.".format(cat_path))
                     if item.get('title', None) and item.get('states', None) and item.get('group_name'):
                         dataset = None
                         with transaction.atomic():
