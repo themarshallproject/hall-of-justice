@@ -1,8 +1,21 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from localflavor.us.us_states import STATE_CHOICES
+
+STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
 
 
-class Category(models.Model):
+class TimestampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+        get_latest_by = 'created_at'
+        ordering = ('-updated_at', '-created_at',)
+
+
+class Category(TimestampedModel):
     name = models.CharField(max_length=50)
     parent = models.ForeignKey("self", related_name="children", null=True, blank=True)
 
@@ -22,8 +35,8 @@ class Category(models.Model):
         return self.pathname
 
 
-class Dataset(models.Model):
-    state = models.CharField(max_length=40)
+class Dataset(TimestampedModel):
+    states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2))
     sublocation = models.CharField(blank=True, max_length=150)
     categories = models.ManyToManyField("Category")
     title = models.TextField()
