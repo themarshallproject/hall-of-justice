@@ -1,7 +1,6 @@
 from django.core.management.base import LabelCommand
 from django.db import transaction
 from django.core.exceptions import ValidationError
-import time
 
 from csv import DictReader
 import os
@@ -22,9 +21,12 @@ class Command(LabelCommand):
                 # "category": "categories",
                 "internet_availability": "internet_available",
                 "tag": "tags",
-                "format": "formats"
+                "format": "formats",
+                "state": "states"
             }
-            array_fields = ("tags", "formats", "sectors")
+            if 'state' in item and item['state'].startswith('Nat'):
+                item['state'] = 'US'
+            array_fields = ("tags", "formats", "sectors", "states",)
             for old_key, new_key in mappings.items():
                 value = item.pop(old_key, None)
                 if value:
@@ -74,24 +76,27 @@ class Command(LabelCommand):
                     top_cat_name = item.pop('category', None)
                     sub_cat_name = item.pop('subcategory', None)
                     cat_obj = top_cat = None
-                    # import ipdb; ipdb.set_trace()
                     if top_cat_name:
+                        top_cat_name = top_cat_name.title()
                         try:
-                            top_cat = Category.objects.get(name=top_cat_name, parent__isnull=True)
+                            top_cat = Category.objects.get(name__iexact=top_cat_name, parent__isnull=True)
+                            print("Found '{}' category".format(top_cat_name))
                             cat_obj = top_cat
                         except Category.MultipleObjectsReturned:
-                            print("Multiple matches for {}".format(top_cat_name))
+                            print("Multiple category matches for {}".format(top_cat_name))
                         except Category.DoesNotExist:
                             print("No '{}' category".format(top_cat_name))
                         if sub_cat_name:
+                            sub_cat_name = sub_cat_name.title()
                             cat_path = "{}/{}".format(top_cat_name, sub_cat_name)
                             try:
-                                cat_obj = Category.objects.get(name=sub_cat_name, parent=top_cat)
+                                cat_obj = Category.objects.get(name__iexact=sub_cat_name, parent=top_cat)
+                                print("Found '{}' subcategory".format(top_cat_name))
                             except Category.MultipleObjectsReturned:
-                                print("Multiple matches for {}".format(cat_path))
+                                print("Multiple subcategory matches for {}".format(cat_path))
                             except Category.DoesNotExist:
-                                print("No '{}' category".format(cat_path))
-                    if item.get('title', None) and item.get('state', None) and item.get('group_name'):
+                                print("No '{}' category.".format(cat_path))
+                    if item.get('title', None) and item.get('states', None) and item.get('group_name'):
                         dataset = None
                         with transaction.atomic():
                             dataset = Dataset.objects.create(**item)
@@ -102,7 +107,7 @@ class Command(LabelCommand):
                                 dataset.full_clean()
                                 dataset.save()
                             except ValidationError as e:
-                                self.stderr.write(str(e))
+                                self.stderr.write("Failed to save dataset:\n\t{}".format(str(e)))
                         if dataset:
                             self.stdout.write("Created Dataset: {}\n".format(dataset))
         else:
