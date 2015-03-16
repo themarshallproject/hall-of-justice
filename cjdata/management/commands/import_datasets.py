@@ -22,10 +22,7 @@ class Command(LabelCommand):
                 "internet_availability": "internet_available",
                 "tag": "tags",
                 "format": "formats",
-                "state": "states"
             }
-            if 'state' in item and item['state'].startswith('Nat'):
-                item['state'] = 'US'
             array_fields = ("tags", "formats", "sectors", "states",)
             for old_key, new_key in mappings.items():
                 value = item.pop(old_key, None)
@@ -33,6 +30,17 @@ class Command(LabelCommand):
                     if new_key in array_fields:
                         value = [v.strip() for v in value.split(",")]
                     item[new_key] = value
+
+        def fix_states(item):
+            if 'state' in item:
+                value = item.get('state', '')
+                values_list = value.split(",")
+                for n, v in enumerate(values_list):
+                    if v.startswith('Nat'):
+                        v = 'US'
+                    elif len(v) > 2:
+                        v = None
+                    values_list[n] = v
 
         def standardize_key(k):
             '''Many fields can be fixed by lowercasing and replacing certain characters'''
@@ -70,6 +78,7 @@ class Command(LabelCommand):
                 data_rows = [r for r in reader]
                 for item in data_rows:
                     reformat_dict(item)
+                    fix_states(item)
                     remap_keys(item)
                     booleanize(item)
                     fix_url(item)
