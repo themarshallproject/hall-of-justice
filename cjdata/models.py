@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from localflavor.us.us_states import STATE_CHOICES
 
 STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
+STATE_NATL_LOOKUP = dict(STATE_NATL_CHOICES)
 
 
 class TimestampedModel(models.Model):
@@ -36,7 +37,7 @@ class Category(TimestampedModel):
 
 
 class Dataset(TimestampedModel):
-    states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2))
+    states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[])
     sublocation = models.CharField(blank=True, max_length=150)
     categories = models.ManyToManyField("Category")
     title = models.TextField()
@@ -54,7 +55,7 @@ class Dataset(TimestampedModel):
     mappable = models.NullBooleanField()
     updated = models.NullBooleanField()
     frequency = models.CharField(blank=True, max_length=50)
-    data_range = models.CharField(blank=True, max_length=50)
+    data_range = models.CharField(blank=True, max_length=100)
     associated_grant = models.TextField(blank=True)
     tags = ArrayField(models.CharField(max_length=50), blank=True, default=[],
                       help_text="Tags, separated by commas")
@@ -64,5 +65,16 @@ class Dataset(TimestampedModel):
         verbose_name = "Dataset"
         verbose_name_plural = "Datasets"
 
+    def states_expanded(self):
+        return (STATE_NATL_LOOKUP[s] for s in self.states)
+
+    def get_states_display(self):
+        return ", ".join(self.states_expanded())
+
+    def get_states_abbr_display(self):
+        return ", ".join(self.states)
+
     def __str__(self):
-        return "{o.state} ({sectors}): {o.title}".format(o=self, sectors=",".join(self.sectors))
+        return "{states} ({sectors}): {title}".format(states=self.get_states_display(),
+                                                      title=self.title,
+                                                      sectors=",".join(self.sectors))

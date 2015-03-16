@@ -1,3 +1,4 @@
 {{ object.title }}
-{{ object.descriptione }}
-{{ object.state }}
+{{ object.description }}
+{{ object.get_states_display }}
+{{ object.get_states_abbr_display }}

@@ -43,7 +43,7 @@
                 <tbody>
             {% for result in page.object_list %}
                 <tr data-dataset-id={{ result.object.id }}>
-                    <td>{{ result.object.state }}</td>
+                    <td>{{ result.object.get_states_display }}</td>
                     <td>{{ result.object.categories.all|join:"," }}</td>
                     <td>
                         <a href="{{ result.object.get_absolute_url }}">
