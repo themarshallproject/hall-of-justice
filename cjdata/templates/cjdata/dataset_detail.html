@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ object.title }}</h2>
+    <h3><small>Group:</small> {{ object.group_name }}</h3>
+    <h4><small>URL:</small> {{ object.url|urlizetrunc:90 }}</h4>
+    <h5>Description</h5>
+    <p>{{ object.description }}</p>
+    <h5>Tags</h5>
+    <p>
+        {% for t in object.tags %}
+            <a class="label secondary" href="{% url 'haystack_search' %}?q={{ t|urlencode }}">{{ t }}</a>,
+        {% endfor %}
+    </p>
+    <h5>Other Attributes</h5>
+    <div class="row">
+        <div class="columns large-6">
+            <dl>
+                <dt>Location</dt>
+                <dd>{{ object.location }}</dd>
+                <dt>Sub-location</dt>
+                <dd>{{ object.sublocation }}</dd>
+                <dt>Categories</dt>
+                <dd>{{ object.categories.all|join:", " }}</dd>
+                <dt>Sectors (Govt, Non-Profit, etc)</dt>
+                <dd>{{ object.sectors|join:", "|default:"Not provided" }}</dd>
+                <dt>Formats</dt>
+                <dd>{{ object.formats|join:", "|default:"Not provided" }}</dd>
+            </dl>
+        </div>
+        <div class="columns large-6">
+            <dl>
+                <dt>Internet Available?</dt>
+                <dd>{{ object.internet_available|yesno|title }}</dd>
+                <dt>Has population data?</dt>
+                <dd>{{ object.population_data|yesno|title }}</dd>
+                <dt>Mappable?</dt>
+                <dd>{{ object.mappable|yesno|title }}</dd>
+                <dt>Updated?</dt>
+                <dd>{{ object.updated|yesno|title }}</dd>
+                <dt>Frequency</dt>
+                <dd>{{ object.frequency }}</dd>
+            </dl>
+        </div>
+    </div>
+
+{% endblock content %}

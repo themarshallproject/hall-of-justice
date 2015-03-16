@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views.generic.detail import DetailView
+from cjdata.models import Dataset
 
-# Create your views here.
+
+class DatasetDetailView(DetailView):
+    model = Dataset
