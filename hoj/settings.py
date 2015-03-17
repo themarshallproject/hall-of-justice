@@ -45,6 +45,14 @@ INSTALLED_APPS = (
     'cjdata',
 )
 
+if DEBUG:
+    try:
+        import debug_toolbar
+        INSTALLED_APPS += ('debug_toolbar',)
+    except ImportError:
+        pass
+
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,4 +112,3 @@ HAYSTACK_CONNECTIONS = {
         'INDEX_NAME': 'hall_of_justice'
     },
 }
-
