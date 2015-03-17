@@ -96,7 +96,7 @@
         </div>
         {% else %}
         <div class="columns large-12">
-            <p>Stuck for ideas? Try searching for information about <a href="{% url 'haystack_search' %}?q=schools">schools</a> or <a href="{% url 'haystack_search' %}?q=gangs&amp;selected_facets=states_exact:North Carolina">gangs in North Carolina</a>.</p>
+            <p>Stuck for ideas? Try searching for information about <q><a href="{% url 'haystack_search' %}?q=Juvenile%20Justice">Juvenile Justice</a></q>, or look up <a href="{% url 'haystack_search' %}?q=gangs&amp;selected_facets=states:North Carolina">gangs in North Carolina</a>.</p>
         </div>
         {% endif %}
     </div>
