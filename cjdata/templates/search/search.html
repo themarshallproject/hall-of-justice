@@ -15,19 +15,52 @@
 
             <form method="get" action=".">
                 <div class="row collapse">
-                        <div class="small-10 columns">
+                        <div class="small-9 columns">
                             {{ form.q }}
                         </div>
                         <div class="small-2 columns">
                             <input type="submit" value="Search" class="button postfix">
+                        </div>
+                        <div class="small-1 columns">
+                            <a href="{% url 'haystack_search' %}" class="button secondary postfix">Reset</a>
                         </div>
                 </div>
             </form>
         </div>
     </div>
     <div class="row">
-        <div class="columns large-12">
         {% if query %}
+        <div class="columns large-2">
+            <h4>Filter</h4>
+            <dl>
+                {% if facets.fields.states %}
+                    <dt>States</dt>
+                    {% for state in facets.fields.states %}
+                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=states:{{ state.0|urlencode }}">{{ state.0 }}</a> ({{ state.1 }})</dd>
+                    {% endfor %}
+                {% else %}
+                    <p>No state facets.</p>
+                {% endif %}
+                {% if facets.fields.group_name %}
+                    <dt>Groups</dt>
+                      {# Provide only the top 10 groups #}
+                    {% for name in facets.fields.group_name|slice:":10" %}
+                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }}</a> ({{ name.1 }})</dd>
+                    {% endfor %}
+                {% else %}
+                    <p>No group facets.</p>
+                {% endif %}
+                {% if facets.fields.tags %}
+                    <dt>Tags</dt>
+                    {% for tag in facets.fields.tags %}
+                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=tags:{{ tag.0|urlencode }}">{{ tag.0 }}</a> ({{ tag.1 }})</dd>
+                    {% endfor %}
+                {% else %}
+                    <p>No tag facets.</p>
+                {% endif %}
+            </dl>
+        </div>
+        <div class="columns large-10">
             <h3>Results</h3>
             {% include "search/_pagination_links.html" %}
             <table role="grid">
@@ -42,7 +75,7 @@
                 </thead>
                 <tbody>
             {% for result in page.object_list %}
-                <tr data-dataset-id={{ result.object.id }}>
+                <tr data-dataset-id={{ result.object.uuid }}>
                     <td>{{ result.object.get_states_display }}</td>
                     <td>{{ result.object.categories.all|join:"," }}</td>
                     <td>
@@ -60,9 +93,11 @@
                 </tbody>
             </table>
             {% include "search/_pagination_links.html" %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
-        {% endif %}
         </div>
+        {% else %}
+        <div class="columns large-12">
+            <p>Stuck for ideas? Try searching for information about <a href="{% url 'haystack_search' %}?q=schools">schools</a> or <a href="{% url 'haystack_search' %}?q=gangs&amp;selected_facets=states_exact:North Carolina">gangs in North Carolina</a>.</p>
+        </div>
+        {% endif %}
     </div>
 {% endblock %}

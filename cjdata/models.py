@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from localflavor.us.us_states import STATE_CHOICES
+from django.core.urlresolvers import reverse
+import uuid
 
 STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
 STATE_NATL_LOOKUP = dict(STATE_NATL_CHOICES)
@@ -37,7 +39,9 @@ class Category(TimestampedModel):
 
 
 class Dataset(TimestampedModel):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[])
+    location = models.TextField(blank=True)
     sublocation = models.CharField(blank=True, max_length=150)
     categories = models.ManyToManyField("Category")
     title = models.TextField()
@@ -48,7 +52,6 @@ class Dataset(TimestampedModel):
     sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
                          help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas")
     group_name = models.CharField(help_text="Name of group administering dataset", max_length=150)
-    location = models.TextField(blank=True)
     associated_legislation = models.TextField(blank=True)
     internet_available = models.NullBooleanField()
     population_data = models.NullBooleanField()
@@ -73,6 +76,9 @@ class Dataset(TimestampedModel):
 
     def get_states_abbr_display(self):
         return ", ".join(self.states)
+
+    def get_absolute_url(self):
+        return reverse('dataset-detail', args=[str(self.uuid)])
 
     def __str__(self):
         return "{states} ({sectors}): {title}".format(states=self.get_states_display(),

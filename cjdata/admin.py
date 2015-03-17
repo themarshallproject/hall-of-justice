@@ -14,9 +14,8 @@ class DatasetAdmin(admin.ModelAdmin):
     '''
         Admin View for Dataset
     '''
-    list_display = ('title', 'get_states_display', 'tags', 'url', 'created_at', 'updated_at')
-    list_filter = ('states',)
-    search_fields = ['title', 'description', 'tags']
+    list_display = ('title', 'group_name', 'get_states_display', 'tags', 'url', 'created_at', 'updated_at')
+    search_fields = ['title', 'description', 'tags', 'group_name']
     filter_horizontal = ('categories',)
 
 admin.site.register(Category, CategoryAdmin)
