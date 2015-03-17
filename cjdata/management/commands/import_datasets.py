@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from csv import DictReader
 import os
-from cjdata.models import (Category, Dataset)
+from cjdata.models import (Category, Dataset, STATE_NATL_LOOKUP)
 
 
 class Command(LabelCommand):
@@ -34,14 +34,10 @@ class Command(LabelCommand):
         def fix_states(item):
             if 'state' in item:
                 value = item.pop('state', '')
-                values_list = value.split(",")
-                for n, v in enumerate(values_list):
-                    if v.startswith('Nat'):
-                        v = 'US'
-                    elif len(v) > 2:
-                        v = None
-                    values_list[n] = v
-                item['states'] = values_list
+                values_set = (v.strip() for v in value.split(","))
+                values_set = ('US' if v.startswith('Nat') else v for v in values_set)
+                values_set = (v for v in values_set if v in STATE_NATL_LOOKUP.keys())
+                item['states'] = list(values_set)
 
         def standardize_key(k):
             '''Many fields can be fixed by lowercasing and replacing certain characters'''
