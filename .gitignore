@@ -25,3 +25,6 @@ coverage.xml
 # Project stuff:
 .env
 sandbox/
+staticfiles/*
+!staticfiles/.gitkeep
+

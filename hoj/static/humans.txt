@@ -1,8 +1,11 @@
-/* Foundation was made by ZURB, an interaction design and design strategy firm in Campbell, CA */
-/* zurb.com */
-/* humanstxt.org */
+/* TEAM */
+
+    Lead cool guy: Daniel Cloud
+    Contact: dcloud [at] sunlightfoundation.com
+    Location: Washington, DC, USA
+    Twitter: @danielcloud
 
 /* SITE */
-  Standards: HTML5, CSS3
-  Components: jQuery, Orbit, Reveal
-  Software: Sublime, Git, Sass
+    Language: English
+    Doctype:HTML5
+    IDE: Sublime Text
