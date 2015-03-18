@@ -5,6 +5,7 @@ import datetime
 
 class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
     states = indexes.FacetMultiValueField()
+    sectors = indexes.FacetMultiValueField(model_attr='sectors')
     tags = indexes.FacetMultiValueField(model_attr='tags')
     group_name = indexes.CharField(model_attr='group_name', faceted=True)
 

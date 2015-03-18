@@ -50,6 +50,14 @@
                 {% else %}
                     <p>No group facets.</p>
                 {% endif %}
+                {% if facets.fields.sectors %}
+                    <dt>Sectors</dt>
+                    {% for sector in facets.fields.sectors %}
+                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=sectors:{{ sector.0|urlencode }}">{{ sector.0 }}</a> ({{ sector.1 }})</dd>
+                    {% endfor %}
+                {% else %}
+                    <p>No sector facets.</p>
+                {% endif %}
                 {% if facets.fields.tags %}
                     <dt>Tags</dt>
                     {% for tag in facets.fields.tags %}

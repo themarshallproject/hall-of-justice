@@ -5,7 +5,7 @@ from haystack.views import FacetedSearchView, search_view_factory
 
 from cjdata.views import DatasetDetailView
 
-sqs = SearchQuerySet().facet('states').facet('group_name').facet('tags')
+sqs = SearchQuerySet().facet('states').facet('group_name').facet('tags').facet('sectors')
 
 urlpatterns = patterns(
     '',
