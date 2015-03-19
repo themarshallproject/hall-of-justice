@@ -43,5 +43,9 @@
             </dl>
         </div>
     </div>
+    <div class="row">
+        <h2>More like this</h2>
+        {% include "search/_results_table.html" with results_list=more_like_this %}
 
+    </div>
 {% endblock content %}
