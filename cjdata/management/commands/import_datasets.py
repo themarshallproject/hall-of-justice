@@ -127,6 +127,6 @@ class Command(LabelCommand):
                         if dataset:
                             self.stdout.write("\tCreated Dataset: {}\n".format(dataset))
                     else:
-                        self.stderr.write("\tNot enough data to create a dataset! Need at least a title and group_name".format(item_str))
+                        self.stderr.write("\tNot enough data to create a dataset! Need at least a title and group_name")
         else:
             self.stderr.write('File does not exist at path: {}'.format(label))
