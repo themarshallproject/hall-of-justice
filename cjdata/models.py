@@ -21,21 +21,27 @@ class TimestampedModel(models.Model):
 class Category(TimestampedModel):
     name = models.CharField(max_length=50)
     parent = models.ForeignKey("self", related_name="children", null=True, blank=True)
+    path = models.CharField(max_length=200, editable=False)
 
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-        ordering = ['parent__name', 'name']
+        ordering = ['path', 'parent__name', 'name']
 
-    @property
-    def pathname(self):
+    def save(self, *args, **kwargs):
+        self.path = self._calculate_pathname()
+        super(Category, self).save(*args, **kwargs)
+
+    def _calculate_pathname(self):
         if self.parent:
-            return "{parent_name}/{o.name}".format(o=self, parent_name=str(self.parent))
+            return "{parent_name}/{name}".format(name=self.name, parent_name=str(self.parent.path))
         else:
             return "{o.name}".format(o=self)
 
     def __str__(self):
-        return self.pathname
+        if not self.path:
+            return self._calculate_pathname()
+        return self.path
 
 
 class Dataset(TimestampedModel):

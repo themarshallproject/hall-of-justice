@@ -6,7 +6,7 @@ class CategoryAdmin(admin.ModelAdmin):
     '''
         Admin View for Category
     '''
-    list_display = ('pathname', 'name', 'parent', 'created_at', 'updated_at')
+    list_display = ('path', 'name', 'parent', 'created_at', 'updated_at')
     search_fields = ['name', ]
 
 
