@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 import dj_database_url
+from django.utils.module_loading import import_string
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -43,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'haystack',
+    'elasticstack',
     'localflavor',
 
     'cjdata',
@@ -111,8 +113,10 @@ TEMPLATE_DIRS = (
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'elasticstack.backends.ConfigurableElasticSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice'
     },
 }
+
+ELASTICSEARCH_INDEX_SETTINGS = import_string('cjdata.search.settings.DATASET_INDEX_SETTINGS')
