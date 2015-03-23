@@ -5,7 +5,7 @@ import datetime
 
 
 class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
-    text = CharField(document=True, use_template=True, analyzer='cjdata_analyzer')
+    text = indexes.CharField(document=True, use_template=True)
     states = indexes.FacetMultiValueField()
     sectors = indexes.FacetMultiValueField(model_attr='sectors')
     tags = indexes.FacetMultiValueField(model_attr='tags')

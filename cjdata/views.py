@@ -1,6 +1,6 @@
 from django.views.generic.detail import DetailView
 from cjdata.models import Dataset
-from cjdata.search import sqs
+from cjdata.search.query import sqs
 
 
 class DatasetDetailView(DetailView):

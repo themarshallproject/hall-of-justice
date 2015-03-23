@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from haystack.forms import FacetedSearchForm
 from haystack.views import FacetedSearchView, search_view_factory
 
-from cjdata.search import sqs
+from cjdata.search.query import sqs
 from cjdata.views import DatasetDetailView
 
 urlpatterns = patterns(
