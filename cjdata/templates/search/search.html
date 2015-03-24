@@ -17,8 +17,7 @@
     <div class="row">
         <div class="columns large-12">
             <h2>Search</h2>
-
-            <form method="get" action=".">
+    <form method="get" action=".">
                 <div class="row collapse">
                         <div class="small-9 columns">
                             {{ form.q }}
@@ -33,9 +32,22 @@
             </form>
         </div>
     </div>
+    {% if selected_facets %}
+    <div class="row">
+        <div class="columns large-12">
+            <ul class="inline-list">
+                <li>Selected filters:</li>
+            {% for item in selected_facets.values %}
+                <li><strong>{{ item }}</strong></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
     <div class="row">
         {% if query %}
         <div class="columns large-3">
+
             <h4>Filter by</h4>
             <ul class="stack button-group">
                 <li>
@@ -43,7 +55,7 @@
                     <a href="#" data-dropdown="states" aria-controls="states" aria-expanded="false" class="button secondary dropdown expand">States</a>
                     <ul id="states" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for state in facets.fields.states %}
-                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=states:{{ state.0|urlencode }}">{{ state.0 }} ({{ state.1 }})</a></li>
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=states:{{ state.0|urlencode }}">{{ state.0 }} <strong>({{ state.1 }})</strong></a></li>
                     {% endfor %}
                     </ul>
                 {% else %}
@@ -56,12 +68,24 @@
                       {# Provide only the top 10 groups #}
                     <ul id="groups" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for name in facets.fields.group_name|slice:":10" %}
-                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }} ({{ name.1 }})</a></li>
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
                     {% endfor %}
+                    </ul>
                 {% else %}
                     <button class="disabled secondary">No groups</button>
                 {% endif %}
+                </li>
+                <li>
+                {% if facets.fields.sectors %}
+                    <a href="#" data-dropdown="sectors" aria-controls="sectors" aria-expanded="false" class="button secondary dropdown expand">Sectors</a>
+                    <ul id="sectors" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                    {% for name in facets.fields.sectors %}
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=sectors:{{ name.0|urlencode }}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                    {% endfor %}
                     </ul>
+                {% else %}
+                    <button class="disabled secondary">No groups</button>
+                {% endif %}
                 </li>
             </ul>
         </div>
