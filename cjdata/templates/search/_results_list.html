@@ -1,0 +1,17 @@
+<ul id="results" class="no-bullet">
+{% for result in results_list %}
+    <li class="{% cycle 'odd' 'even' %}" data-dataset-id={{ result.object.uuid }}>
+        <h4>
+            <a href="{{ result.object.get_absolute_url }}">
+            {{ result.object.title|truncatewords:10 }}
+            </a>
+        </h4>
+        <h5 class="subheader">{{ result.object.sectors|join:", "|default:"Not provided" }} | {{ result.object.get_states_display }}</h5>
+        <p>{{ result.object.description|truncatewords:20 }}</p>
+        <p>{{ result.object.url|urlizetrunc:80 }}</p>
+        <p>{{ result.object.categories.all|join:", " }}</p>
+    </li>
+{% empty %}
+    <li>No results found.</li>
+{% endfor %}
+</ul>
