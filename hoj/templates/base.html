@@ -29,6 +29,7 @@
 
     <script src="{% static "js/vendor/jquery.js" %}"></script>
     <script src="{% static "js/foundation.min.js" %}"></script>
+    {% block jslibs %}{% endblock jslibs %}
     <script>
     $(document).foundation();
     </script>

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load static from staticfiles %}
 
 {% block extrahead %}
     {{ block.super }}
@@ -35,50 +35,41 @@
     </div>
     <div class="row">
         {% if query %}
-        <div class="columns large-2">
-            <h4>Filter</h4>
-            <dl>
+        <div class="columns large-3">
+            <h4>Filter by</h4>
+            <ul class="stack button-group">
+                <li>
                 {% if facets.fields.states %}
-                    <dt>States</dt>
+                    <a href="#" data-dropdown="states" aria-controls="states" aria-expanded="false" class="button secondary dropdown expand">States</a>
+                    <ul id="states" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for state in facets.fields.states %}
-                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=states:{{ state.0|urlencode }}">{{ state.0 }}</a> ({{ state.1 }})</dd>
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=states:{{ state.0|urlencode }}">{{ state.0 }} ({{ state.1 }})</a></li>
                     {% endfor %}
+                    </ul>
                 {% else %}
-                    <p>No state facets.</p>
+                    <button class="disabled secondary">No States</button>
                 {% endif %}
+                </li>
+                <li>
                 {% if facets.fields.group_name %}
-                    <dt>Groups</dt>
+                    <a href="#" data-dropdown="groups" aria-controls="groups" aria-expanded="false" class="button secondary dropdown expand">Groups</a>
                       {# Provide only the top 10 groups #}
+                    <ul id="groups" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for name in facets.fields.group_name|slice:":10" %}
-                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }}</a> ({{ name.1 }})</dd>
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }} ({{ name.1 }})</a></li>
                     {% endfor %}
                 {% else %}
-                    <p>No group facets.</p>
+                    <button class="disabled secondary">No groups</button>
                 {% endif %}
-                {% if facets.fields.sectors %}
-                    <dt>Sectors</dt>
-                    {% for sector in facets.fields.sectors %}
-                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=sectors:{{ sector.0|urlencode }}">{{ sector.0 }}</a> ({{ sector.1 }})</dd>
-                    {% endfor %}
-                {% else %}
-                    <p>No sector facets.</p>
-                {% endif %}
-                {% if facets.fields.tags %}
-                    <dt>Tags</dt>
-                    {% for tag in facets.fields.tags %}
-                        <dd><a href="{{ request.get_full_path }}&amp;selected_facets=tags:{{ tag.0|urlencode }}">{{ tag.0 }}</a> ({{ tag.1 }})</dd>
-                    {% endfor %}
-                {% else %}
-                    <p>No tag facets.</p>
-                {% endif %}
-            </dl>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        <div class="columns large-10">
+        <div class="columns large-9">
             <h3>Results</h3>
             {% include "search/_pagination_links.html" %}
             {% include "search/_results_list.html" with results_list=page.object_list %}
             {% include "search/_pagination_links.html" %}
-        </div>
         {% else %}
         <div class="columns large-12">
             <p>Stuck for ideas? Try searching for information about <q><a href="{% url 'haystack_search' %}?q=Juvenile%20Justice">Juvenile Justice</a></q>, or look up <a href="{% url 'haystack_search' %}?q=gangs&amp;selected_facets=states:North Carolina">gangs in North Carolina</a>.</p>
@@ -86,3 +77,7 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% block jslibs %}
+<script src="{% static "js/foundation/foundation.dropdown.js" %}"></script>
+{% endblock jslibs %}
