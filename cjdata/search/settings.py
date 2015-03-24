@@ -4,22 +4,25 @@ STATES_SYNONYMS = ["{}=>{}".format(v.lower(), k.lower()) for k, v in STATE_NATL_
 
 cj_synonyms = [
     "homicide,murder,kill",
-    "close management,shu,solitary housing unit,solitary,solitary confinement=>shu",
-    "stop and frisk,Terry stop,pedestrian stop,stops,stop and search,stop question and frisk",
+    "close management=>close management,shu",
+    "solitary housing unit=>solitary housing unit,shu",
+    "solitary confinement=>solitary confinement,shu",
+    "shu,solitary=>shu",
+    "stop frisk,terry stop,pedestrian stop,stops,stop search,stop question frisk",
     "death penalty,capital punishment",
-    "deconfliction,information sharing"
+    "deconfliction,information sharing",
     "arrests,bookings",
     "public legal services,indigent defense,public defenders",
-    "calls for service,calls for assistance,CAD,911 calls,CFS,dispatch",
+    "calls service,calls assistance,CAD,911 call,CFS,dispatch",
     "domestic violence,intimate partner violence,domestic abuse,dating violence",
-    "use of force,officer-involved shooting,death in custody,arrest-related death"
+    "use force,officer-involved shooting,death custody,arrest-related death",
     "larceny,theft",
     "prison,jail",
     "exoneration,pardon,dismissal",
     "restitution,victim compensation,compensation",
     "juvenile delinquent,juvenile,delinquent",
     "parole,probation",
-    "Part I crime,Index crime"
+    "part i crime,index crime"
 ]
 cj_synonyms.extend(STATES_SYNONYMS)
 

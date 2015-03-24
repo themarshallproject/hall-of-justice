@@ -2,4 +2,3 @@
 {{ object.description }}
 {{ object.group_name }}
 {{ object.get_states_display }}
-{{ object.get_states_abbr_display }}

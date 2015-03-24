@@ -113,7 +113,7 @@ TEMPLATE_DIRS = (
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'elasticstack.backends.ConfigurableElasticSearchEngine',
+        'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice'
     },
