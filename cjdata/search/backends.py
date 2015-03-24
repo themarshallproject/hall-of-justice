@@ -189,7 +189,7 @@ class SimpleESBackend(ConfigurableElasticBackend):
             filters.append({
                 'fquery': {
                     'query': {
-                        'match': {
+                        'query_string': {
                             'query': q
                         },
                     },
