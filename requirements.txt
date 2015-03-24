@@ -2,6 +2,7 @@ pytz>=2014.10
 Django>=1.8b2
 dj-database-url==0.3.0
 elasticsearch==1.4.0
+elasticstack==0.1.1
 django-haystack>=2.3.1
 django-localflavor==1.1
 psycopg2==2.6
