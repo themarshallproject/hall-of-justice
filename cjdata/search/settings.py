@@ -45,6 +45,11 @@ DATASET_INDEX_SETTINGS = {
                 "english_possessive_stemmer": {
                     "type": "stemmer",
                     "language": "possessive_english"
+                },
+                "haystack_edgengram": {
+                    "type": "edgeNGram",
+                    "min_gram": 2,
+                    "max_gram": 15
                 }
             },
             "analyzer": {
@@ -57,6 +62,11 @@ DATASET_INDEX_SETTINGS = {
                         "english_possessive_stemmer",
                         "english_stemmer",
                     ]
+                },
+                "edgengram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "lowercase",
+                    "filter": ["haystack_edgengram"]
                 }
             }
         }
