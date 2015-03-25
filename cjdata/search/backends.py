@@ -36,7 +36,6 @@ class SimpleESBackend(ConfigurableElasticBackend):
             kwargs = {
                 'query': {
                     "match_all": {},
-                    'analyzer': self.DEFAULT_ANALYZER  # setting courtesy of ConfigurableElasticBackend
                 },
             }
         else:
