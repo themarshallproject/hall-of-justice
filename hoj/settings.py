@@ -115,9 +115,17 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
-        'INDEX_NAME': 'hall_of_justice'
+        'INDEX_NAME': 'hall_of_justice',
+        'EXCLUDED_INDEXES': ['cjdata.search_indexes.CategoryIndex']
     },
+    'autocomplete': {
+        'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
+        'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
+        'INDEX_NAME': 'hall_of_justice_autocomplete',
+        'EXCLUDED_INDEXES': ['cjdata.search_indexes.DatasetIndex']
+    }
 }
+# HAYSTACK_ROUTERS = ['cjdata.search.routers.CJRouter', 'haystack.routers.DefaultRouter']
 
 ELASTICSEARCH_INDEX_SETTINGS = import_string('cjdata.search.settings.DATASET_INDEX_SETTINGS')
 ELASTICSEARCH_DEFAULT_ANALYZER = 'cjdata_analyzer'
