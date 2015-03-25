@@ -26,6 +26,7 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
 
 class CategoryIndex(indexes.ModelSearchIndex, indexes.Indexable):
+    text = EdgeNgramField(document=True, use_template=True, analyzer='edgengram_analyzer')
     path = EdgeNgramField(model_attr='path', analyzer='edgengram_analyzer')
 
     class Meta:
