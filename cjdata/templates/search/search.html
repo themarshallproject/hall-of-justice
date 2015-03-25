@@ -17,7 +17,7 @@
     <div class="row">
         <div class="columns large-12">
             <h2>Search</h2>
-    <form method="get" action=".">
+            <form method="get" action=".">
                 <div class="row collapse">
                         <div class="small-9 columns">
                             {{ form.q }}
@@ -46,7 +46,7 @@
     {% endif %}
     <div class="row">
         {% if query %}
-        <div class="columns large-3">
+        <div class="columns large-2">
 
             <h4>Filter by</h4>
             <ul class="stack button-group">
@@ -65,7 +65,7 @@
                 <li>
                 {% if facets.fields.group_name %}
                     <a href="#" data-dropdown="groups" aria-controls="groups" aria-expanded="false" class="button secondary dropdown expand">Groups</a>
-                      {# Provide only the top 10 groups #}
+                    {# Provide only the top 10 groups #}
                     <ul id="groups" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for name in facets.fields.group_name|slice:":10" %}
                         <li><a href="{{ request.get_full_path }}&amp;selected_facets=group_name_exact:{{ name.0|urlencode }}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
@@ -89,10 +89,10 @@
                 </li>
             </ul>
         </div>
-        <div class="columns large-9">
+        <div class="columns large-10">
             <h3>Results</h3>
             {% include "search/_pagination_links.html" %}
-            {% include "search/_results_list.html" with results_list=page.object_list %}
+            {% include "search/_results_table.html" with results_list=page.object_list %}
             {% include "search/_pagination_links.html" %}
         {% else %}
         <div class="columns large-12">

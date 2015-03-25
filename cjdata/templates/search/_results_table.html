@@ -4,7 +4,7 @@
             <th>State/Location</th>
             <th>Categories</th>
             <th>Title</th>
-            <th>Sectors</th>
+            <th>Group</th>
             <th width="110">URL</th>
         </tr>
     </thead>
@@ -19,7 +19,7 @@
             {{ result.object.title }}
             </a>
         </td>
-        <td>{{ result.object.sectors|join:", "|default:"Not provided" }}</td>
+        <td>{{ result.object.group_name|default:"Not provided" }}</td>
         <td><a data-tooltip aria-haspopup="true" class="has-tip" rel="external nofollow" target="_blank" title="{{ result.object.url }}" href="{{ result.object.url }}">Dataset URL</a></td>
     </tr>
 {% empty %}
