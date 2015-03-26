@@ -31,8 +31,9 @@
     <script src="{% static "js/foundation.min.js" %}"></script>
     {% block jslibs %}{% endblock jslibs %}
     <script>
-    $(document).foundation();
+        $(document).foundation();
     </script>
+    {% block js %}{% endblock js %}
 </body>
 
 </html>

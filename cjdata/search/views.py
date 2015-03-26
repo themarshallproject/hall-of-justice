@@ -23,8 +23,7 @@ class AutocompleteView(View):
         query = request.GET.get('q', '')
         sqs = SearchQuerySet().using('autocomplete').filter(content=query)
 
-        suggestions = set([s.path for s in sqs])
+        paths = (s.path for s in sqs)
+        suggestions = ({'value': p} for p in set(paths))
 
-        response = JsonResponse({'results': list(suggestions)})
-
-        return response
+        return JsonResponse({'results': list(suggestions)})

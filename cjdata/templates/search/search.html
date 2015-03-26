@@ -11,16 +11,23 @@
             padding-bottom: 6px;
             margin-bottom: 10px;
         }
+        .open {
+            left: 0 !important;
+        }
     </style>{% endblock extrahead %}
 
 {% block content %}{% load highlight %}
     <div class="row">
         <div class="columns large-12">
             <h2>Search</h2>
-            <form method="get" action=".">
+            <form id="search" method="get" action=".">
                 <div class="row collapse">
                         <div class="small-9 columns">
-                            {{ form.q }}
+                            <input autocomplete="off" id="{{ form.q.id_for_label }}"
+                                class="typeahead" name="{{ form.q.html_name }}"
+                                value="{{ form.q.value|default:"" }}" type="search"
+                                data-dropdown="auto-dropdown" aria-controls="auto-dropdown" aria-expanded="false">
+                            <ul class="f-dropdown" id="auto-dropdown" aria-hidden="true" tabindex="-1"></ul>
                         </div>
                         <div class="small-2 columns">
                             <input type="submit" value="Search" class="button postfix">
@@ -105,3 +112,39 @@
 {% block jslibs %}
 <script src="{% static "js/foundation/foundation.dropdown.js" %}"></script>
 {% endblock jslibs %}
+{% block js %}
+<script type="text/javascript">
+    var lastSearch = null;
+    jQuery(document).ready(function($) {
+        var results_dropdown = $('#auto-dropdown');
+
+        $('form#search').on('input', '.typeahead', function() {
+            var search_input = $(this);
+            var search = search_input.val();
+            console.log( search );
+            if (search.length > 2) {
+                if (search != lastSearch) {
+                    lastSearch = search;
+                    $.getJSON('{% url "haystack_autocomplete" %}', {q: search.trim()}, function(json, textStatus) {
+                        results_dropdown.empty();
+                        if (json.results) {
+                            var results_list = $.map(json.results, function(val, i) {
+                                return val.value;
+                            });
+
+                            for (var i = 0; i < results_list.length; i++) {
+                                $('<li><a href="#">' + results_list[i] + '</a></li>').appendTo(results_dropdown);
+                            };
+                            results_dropdown.foundation('dropdown', 'open');
+                        } else {
+                            console.log('Error fetching/parsing autocomplete results');
+                        }
+                    });
+                }
+            } else {
+                results_dropdown.empty();
+            }
+        });
+    });
+</script>
+{% endblock js %}
