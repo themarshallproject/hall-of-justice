@@ -2,6 +2,8 @@
 
 {% block extrahead %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
     <style type="text/css" media="screen">
         .highlighted {
             font-weight: 1000;
@@ -11,8 +13,15 @@
             padding-bottom: 6px;
             margin-bottom: 10px;
         }
-        .open {
-            left: 0 !important;
+        .ui-autocomplete {
+            background: #FFFFFF;
+            border: solid 1px #cccccc;
+            font-size: 0.875rem;
+        }
+        .ui-state-focus {
+            border-left: solid 1px #cccccc;
+            border-right: solid 1px #cccccc;
+            background: #EEEEEE;
         }
     </style>{% endblock extrahead %}
 
@@ -25,9 +34,7 @@
                         <div class="small-9 columns">
                             <input autocomplete="off" id="{{ form.q.id_for_label }}"
                                 class="typeahead" name="{{ form.q.html_name }}"
-                                value="{{ form.q.value|default:"" }}" type="search"
-                                data-dropdown="auto-dropdown" aria-controls="auto-dropdown" aria-expanded="false">
-                            <ul class="f-dropdown" id="auto-dropdown" aria-hidden="true" tabindex="-1"></ul>
+                                value="{{ form.q.value|default:"" }}" type="search">
                         </div>
                         <div class="small-2 columns">
                             <input type="submit" value="Search" class="button postfix">
@@ -110,39 +117,57 @@
 {% endblock %}
 
 {% block jslibs %}
-<script src="{% static "js/foundation/foundation.dropdown.js" %}"></script>
+<script src="{% static "js/jquery-ui.min.js" %}"></script>
 {% endblock jslibs %}
 {% block js %}
 <script type="text/javascript">
     var lastSearch = null;
     jQuery(document).ready(function($) {
-        var results_dropdown = $('#auto-dropdown');
-
-        $('form#search').on('input', '.typeahead', function() {
-            var search_input = $(this);
-            var search = search_input.val();
-            console.log( search );
-            if (search.length > 2) {
-                if (search != lastSearch) {
-                    lastSearch = search;
-                    $.getJSON('{% url "haystack_autocomplete" %}', {q: search.trim()}, function(json, textStatus) {
-                        results_dropdown.empty();
-                        if (json.results) {
-                            var results_list = $.map(json.results, function(val, i) {
-                                return val.value;
-                            });
-
-                            for (var i = 0; i < results_list.length; i++) {
-                                $('<li><a href="#">' + results_list[i] + '</a></li>').appendTo(results_dropdown);
-                            };
-                            results_dropdown.foundation('dropdown', 'open');
-                        } else {
-                            console.log('Error fetching/parsing autocomplete results');
-                        }
-                    });
-                }
-            } else {
-                results_dropdown.empty();
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+        var input_id = "input#{{ form.q.id_for_label }}";
+        $(input_id).on('input', function(event) {
+            if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                var lastTerm = extractLast(request.term);
+                console.log("request.term: " + lastTerm);
+                $.getJSON('{% url "haystack_autocomplete" %}', {
+                    q: extractLast(request.term)
+                })
+                .done(function(json) {
+                    var results = []
+                    if (json.results) {
+                        results = $.map(json.results, function(val, i) {
+                            return val.value;
+                        });
+                    } else {
+                        console.log('Error fetching/parsing autocomplete results');
+                    }
+                    response(results);
+                });
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
             }
         });
     });
