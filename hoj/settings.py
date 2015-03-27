@@ -116,7 +116,7 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice',
-        'EXCLUDED_INDEXES': ['cjdata.search_indexes.CategoryIndex']
+        'EXCLUDED_INDEXES': ['cjdata.search_indexes.CategoryIndex', 'cjdata.search_indexes.TagIndex']
     },
     'autocomplete': {
         'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',

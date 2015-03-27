@@ -1,5 +1,5 @@
 from haystack import indexes
-from elasticstack.fields import EdgeNgramField
+from elasticstack.fields import EdgeNgramField, MultiValueField
 from cjdata.models import Dataset, Category
 import datetime
 
@@ -26,12 +26,29 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
 
 class CategoryIndex(indexes.ModelSearchIndex, indexes.Indexable):
-    text = EdgeNgramField(document=True, use_template=True, analyzer='edgengram_analyzer')
-    path = EdgeNgramField(model_attr='path', analyzer='edgengram_analyzer')
+    text = EdgeNgramField(document=True, analyzer='edgengram_analyzer')
 
     class Meta:
         model = Category
-        excludes = ['parent']
+        fields = ['name']
+
+    def prepare_text(self, object):
+        return object.path
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
+
+
+class TagIndex(indexes.ModelSearchIndex, indexes.Indexable):
+    text = MultiValueField(document=True, analyzer='edgengram_analyzer')
+
+    class Meta:
+        model = Dataset
+        fields = ['title', 'group_name']
+
+    def prepare_text(self, object):
+        return object.tags
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
