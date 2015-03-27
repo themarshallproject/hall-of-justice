@@ -22,6 +22,14 @@ except ImportError:
 class SimpleESBackend(ConfigurableElasticBackend):
     """An attempt at a custom simple ES search using simpler query syntax."""
 
+    DEFAULT_MINIMUM_MATCH = '50%'
+
+    def __init__(self, *args, **kwargs):
+        super(SimpleESBackend, self).__init__(*args, **kwargs)
+        user_minimum_match = getattr(settings, 'ELASTICSEARCH_MINIMUM_SHOULD_MATCH', None)
+        if user_minimum_match:
+            setattr(self, 'DEFAULT_MINIMUM_MATCH', user_minimum_match)
+
     def build_search_kwargs(self, query_string, sort_by=None, start_offset=0, end_offset=None,
                             fields='', highlight=False, facets=None,
                             date_facets=None, query_facets=None,
@@ -44,7 +52,8 @@ class SimpleESBackend(ConfigurableElasticBackend):
                     'match': {
                         str(content_field): {
                             'query': query_string,
-                            'analyzer': self.DEFAULT_ANALYZER  # setting courtesy of ConfigurableElasticBackend
+                            'analyzer': self.DEFAULT_ANALYZER,  # setting courtesy of ConfigurableElasticBackend
+                            'minimum_should_match': self.DEFAULT_MINIMUM_MATCH
                         }
                     },
                 },
