@@ -4,46 +4,13 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
-    <style type="text/css" media="screen">
-        .highlighted {
-            font-weight: 1000;
-        }
-        #results > li {
-            border-bottom: 2px solid #EEEEEE;
-            padding-bottom: 6px;
-            margin-bottom: 10px;
-        }
-        .ui-autocomplete {
-            background: #FFFFFF;
-            border: solid 1px #cccccc;
-            font-size: 0.875rem;
-        }
-        .ui-state-focus {
-            border-left: solid 1px #cccccc;
-            border-right: solid 1px #cccccc;
-            background: #EEEEEE;
-        }
-    </style>{% endblock extrahead %}
+{% endblock extrahead %}
 
 {% block content %}{% load highlight %}
     <div class="row">
         <div class="columns large-12">
             <h2>Search</h2>
-            <form id="search" method="get" action=".">
-                <div class="row collapse">
-                        <div class="small-9 columns">
-                            <input autocomplete="off" id="{{ form.q.id_for_label }}"
-                                class="typeahead" name="{{ form.q.html_name }}"
-                                value="{{ form.q.value|default:"" }}" type="search">
-                        </div>
-                        <div class="small-2 columns">
-                            <input type="submit" value="Search" class="button postfix">
-                        </div>
-                        <div class="small-1 columns">
-                            <a href="{% url 'haystack_search' %}" class="button secondary postfix">Reset</a>
-                        </div>
-                </div>
-            </form>
+            {% include "search/_search_form.html" %}
         </div>
     </div>
     {% if selected_facets %}
@@ -118,58 +85,10 @@
 
 {% block jslibs %}
 <script src="{% static "js/jquery-ui.min.js" %}"></script>
+<script src="{% static "js/search.js" %}"></script>
 {% endblock jslibs %}
 {% block js %}
 <script type="text/javascript">
-    var lastSearch = null;
-    jQuery(document).ready(function($) {
-        function split( val ) {
-            return val.split( /,\s*/ );
-        }
-        function extractLast( term ) {
-            return split( term ).pop();
-        }
-        var input_id = "input#{{ form.q.id_for_label }}";
-        $(input_id).on('input', function(event) {
-            if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
-                event.preventDefault();
-            }
-        }).autocomplete({
-            minLength: 3,
-            source: function(request, response) {
-                var lastTerm = extractLast(request.term);
-                console.log("request.term: " + lastTerm);
-                $.getJSON('{% url "haystack_autocomplete" %}', {
-                    q: extractLast(request.term)
-                })
-                .done(function(json) {
-                    var results = []
-                    if (json.results) {
-                        results = $.map(json.results, function(val, i) {
-                            return val.value;
-                        });
-                    } else {
-                        console.log('Error fetching/parsing autocomplete results');
-                    }
-                    response(results);
-                });
-            },
-            select: function( event, ui ) {
-                var terms = split( this.value );
-                // remove the current input
-                terms.pop();
-                // add the selected item
-                terms.push( ui.item.value );
-                // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = terms.join( ", " );
-                return false;
-            },
-            focus: function() {
-                // prevent value inserted on focus
-                return false;
-            }
-        });
-    });
+var searchURL = '{% url "haystack_autocomplete" %}';
 </script>
 {% endblock js %}

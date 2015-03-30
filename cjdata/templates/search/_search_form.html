@@ -1,0 +1,15 @@
+<form id="search" method="get" action="{% url 'haystack_search' %}">
+    <div class="row collapse">
+            <div class="small-9 columns">
+                <input class="autocomplete" autocomplete="off" id="id_q"
+                    class="typeahead" name="q"
+                    value="{{ form.q.value|default:"" }}" type="search">
+            </div>
+            <div class="small-2 columns">
+                <input type="submit" value="Search" class="button postfix">
+            </div>
+            <div class="small-1 columns">
+                <a href="{% url 'haystack_search' %}" class="button secondary postfix">Reset</a>
+            </div>
+    </div>
+</form>

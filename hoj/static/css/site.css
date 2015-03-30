@@ -1,0 +1,21 @@
+table {
+    width: 100%;
+}
+.highlighted {
+    font-weight: 1000;
+}
+#results > li {
+    border-bottom: 2px solid #EEEEEE;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+}
+.ui-autocomplete {
+    background: #FFFFFF;
+    border: solid 1px #cccccc;
+    font-size: 0.875rem;
+}
+.ui-state-focus {
+    border-left: solid 1px #cccccc;
+    border-right: solid 1px #cccccc;
+    background: #EEEEEE;
+}
