@@ -105,9 +105,9 @@
         </div>
         <div class="columns large-10">
             <h3>Results</h3>
-            {% include "search/_pagination_links.html" %}
+            {% include "cjdata/_pagination_links.html" %}
             {% include "search/_results_table.html" with results_list=page.object_list %}
-            {% include "search/_pagination_links.html" %}
+            {% include "cjdata/_pagination_links.html" %}
         {% else %}
         <div class="columns large-12">
             <p>Stuck for ideas? Try searching for information about <q><a href="{% url 'haystack_search' %}?q=Juvenile%20Justice">Juvenile Justice</a></q>, or look up <a href="{% url 'haystack_search' %}?q=gangs&amp;selected_facets=states:North Carolina">gangs in North Carolina</a>.</p>

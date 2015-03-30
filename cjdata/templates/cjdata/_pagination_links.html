@@ -1,7 +1,7 @@
 {% if paginator %}
     <ul class="pagination">
         <li>
-            {{ paginator.count }} results
+            {{ paginator.count }} items
         </li>
         <li class="arrow {% if not page.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
             {% if page.has_previous %}?q={{ query }}&amp;page=1{% endif %}

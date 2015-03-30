@@ -1,0 +1,29 @@
+<table role="grid">
+    <thead>
+        <tr>
+            <th>State/Location</th>
+            <th>Categories</th>
+            <th>Title</th>
+            <th>Group</th>
+            <th width="110">URL</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for object in object_list %}
+    <tr data-dataset-id={{ object.uuid }}>
+        <td>{{ object.get_states_display }}</td>
+        <td>{{ object.categories.all|join:"," }}</td>
+        <td>
+            <a href="{{ object.get_absolute_url }}">
+            {# {% highlight object.title with query %} #}
+            {{ object.title }}
+            </a>
+        </td>
+        <td>{{ object.group_name|default:"Not provided" }}</td>
+        <td><a data-tooltip aria-haspopup="true" class="has-tip" rel="external nofollow" target="_blank" title="{{ object.url }}" href="{{ object.url }}">Dataset URL</a></td>
+    </tr>
+{% empty %}
+    <p>No results found.</p>
+{% endfor %}
+    </tbody>
+</table>
