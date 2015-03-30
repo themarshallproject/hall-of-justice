@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from localflavor.us.us_states import STATE_CHOICES
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 import uuid
 
 STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
@@ -20,6 +21,7 @@ class TimestampedModel(models.Model):
 
 class Category(TimestampedModel):
     name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=70, editable=False)
     parent = models.ForeignKey("self", related_name="children", null=True, blank=True)
     path = models.CharField(max_length=200, editable=False)
 
@@ -27,9 +29,11 @@ class Category(TimestampedModel):
         verbose_name = "Category"
         verbose_name_plural = "Categories"
         ordering = ['path', 'parent__name', 'name']
+        unique_together = ("name", "parent")
 
     def save(self, *args, **kwargs):
         self.path = self._calculate_pathname()
+        self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
     def _calculate_pathname(self):
