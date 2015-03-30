@@ -3,19 +3,19 @@
         <li>
             {{ paginator.count }} items
         </li>
-        <li class="arrow {% if not page.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
-            {% if page.has_previous %}?q={{ query }}&amp;page=1{% endif %}
+        <li class="arrow {% if not page_obj.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page_obj.has_previous %}?{% if query %}q={{ query }}&amp;{% endif %}page=1{% endif %}
         {% endspaceless %}
         ">&laquo; First</a></li>
-        <li class="arrow {% if not page.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
-            {% if page.has_previous %}?q={{ query }}&amp;page={{ page.previous_page_number }}{% endif %}
+        <li class="arrow {% if not page_obj.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page_obj.has_previous %}?{% if query %}q={{ query }}&amp;{% endif %}page={{ page_obj.previous_page_number }}{% endif %}
         {% endspaceless %}
         ">&lsaquo; Previous</a></li>
-        <li class="arrow {% if not page.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
-            {% if page.has_next %}?q={{ query }}&amp;page={{ page.next_page_number }}{% endif %}
+        <li class="arrow {% if not page_obj.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page_obj.has_next %}?{% if query %}q={{ query }}&amp;{% endif %}page={{ page_obj.next_page_number }}{% endif %}
         {% endspaceless %}">Next &rsaquo;</a></li>
-        <li class="arrow {% if not page.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
-            {% if page.has_next %}?q={{ query }}&amp;page={{ page.paginator.num_pages }}{% endif %}
+        <li class="arrow {% if not page_obj.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
+            {% if page_obj.has_next %}?{% if query %}q={{ query }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}{% endif %}
         {% endspaceless %}">Last &raquo;</a></li>
 
     </ul>
