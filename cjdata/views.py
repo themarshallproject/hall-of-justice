@@ -21,8 +21,8 @@ class CategoryDatasetsView(ListView):
 
     def get_queryset(self):
         path_arg = self.kwargs.get('path', None)
-        self.category = get_object_or_404(Category, path=path_arg.replace('-', ' '))
-        return Dataset.objects.filter(categories__path__iexact=self.category.path)
+        self.category = get_object_or_404(Category, path__iexact=path_arg.replace('-', ' '))
+        return Dataset.objects.filter(categories__path=self.category.path)
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDatasetsView, self).get_context_data(**kwargs)
