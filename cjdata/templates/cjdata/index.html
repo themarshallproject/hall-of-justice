@@ -20,9 +20,9 @@
         <div class="columns large-12">
             <p>Not sure what to search for? Try browsing our categories.</p>
             <h3>Main categories</h3>
-            <ul>{% for item in categories.all %}
+            <ul>{% for item in main_categories.all %}
                 <li>
-                    <a href="{% url 'dataset-by-category' category=item.name|slugify %}">{{ item.name }}</a>
+                    <a href="{% url 'datasets-by-category' category=item.name|slugify %}">{{ item.name }}</a>
                 </li>{% endfor %}
             </ul>
         </div>

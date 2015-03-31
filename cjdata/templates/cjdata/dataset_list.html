@@ -1,7 +1,13 @@
 {% extends 'base.html' %}{% load static from staticfiles %}
 
 {% block pageheader %}
-        <h1>{{ category.path }}</h1>
+        <h1>Datasets for {% spaceless %}
+            {% if category %}
+                {{ category.path }}
+            {% elif location %}
+                {{ location }}
+            {% endif %}
+        {% endspaceless %}</h1>
 {% endblock pageheader %}
 
 
