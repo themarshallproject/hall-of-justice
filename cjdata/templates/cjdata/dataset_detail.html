@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
+{% block pageheader %}
+    <h1>{{ object.title }}</h1>
+{% endblock pageheader %}
+
 {% block content %}
-    <h2>{{ object.title }}</h2>
     <h3><small>Group:</small> {{ object.group_name }}</h3>
     <h4><small>URL:</small> {{ object.url|urlizetrunc:90 }}</h4>
     <h5>Description</h5>

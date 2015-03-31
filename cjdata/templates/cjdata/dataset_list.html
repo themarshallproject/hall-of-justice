@@ -1,5 +1,10 @@
 {% extends 'base.html' %}{% load static from staticfiles %}
 
+{% block pageheader %}
+        <h1>{{ category.path }}</h1>
+{% endblock pageheader %}
+
+
 {% block content %}
     {% include "cjdata/_pagination_links.html" %}
     {% include "cjdata/_datasets_table.html" with object_list=page_obj.object_list %}
