@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load static from staticfiles %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
+{% endblock extrahead %}
+
+{% block pageheader %}
+    <h1>Criminal Justice Data Prototype</h1>
+{% endblock pageheader %}
+
+{% block content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% include "search/_search_form.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-12">
+            <p>Not sure what to search for? Try browsing our categories.</p>
+            <h3>Main categories</h3>
+            <ul>{% for item in categories.all %}
+                <li>
+                    <a href="{% url 'dataset-by-category' category=item.name|slugify %}">{{ item.name }}</a>
+                </li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block jslibs %}
+<script src="{% static "js/jquery-ui.min.js" %}"></script>
+<script src="{% static "js/search.js" %}"></script>
+{% endblock jslibs %}
+{% block js %}
+<script type="text/javascript">
+var searchURL = '{% url "haystack_autocomplete" %}';
+</script>
+{% endblock js %}

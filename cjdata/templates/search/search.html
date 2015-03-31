@@ -6,10 +6,13 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
 {% endblock extrahead %}
 
+{% block pageheader %}
+    <h1>Search</h1>
+{% endblock pageheader %}
+
 {% block content %}{% load highlight %}
     <div class="row">
         <div class="columns large-12">
-            <h2>Search</h2>
             {% include "search/_search_form.html" %}
         </div>
     </div>

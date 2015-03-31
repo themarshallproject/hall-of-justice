@@ -1,10 +1,22 @@
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic.base import ContextMixin
 from django.shortcuts import get_object_or_404
 from cjdata.models import Dataset, Category
 from cjdata.search.query import sqs
 
 
-class DatasetDetailView(DetailView):
+class CategoryContextMixin(ContextMixin):
+    def get_context_data(self, **kwargs):
+            context = super(CategoryContextMixin, self).get_context_data(**kwargs)
+            context['categories'] = Category.objects.filter(parent__isnull=True)
+            return context
+
+
+class IndexView(TemplateView, CategoryContextMixin):
+    template_name = "cjdata/index.html"
+
+
+class DatasetDetailView(DetailView, CategoryContextMixin):
     model = Dataset
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
@@ -15,14 +27,17 @@ class DatasetDetailView(DetailView):
         return context
 
 
-class CategoryDatasetsView(ListView):
+class CategoryDatasetsView(ListView, CategoryContextMixin):
     model = Dataset
     paginate_by = 50
 
     def get_queryset(self):
-        path_arg = self.kwargs.get('path', None)
-        self.category = get_object_or_404(Category, path__iexact=path_arg.replace('-', ' '))
-        return Dataset.objects.filter(categories__path=self.category.path)
+        cat_slug = self.kwargs.get('category', None)
+        subcat_slug = self.kwargs.get('subcategory', None)
+        self.category = get_object_or_404(Category, slug=cat_slug, parent__isnull=True)
+        if subcat_slug:
+            self.category = get_object_or_404(Category, slug=subcat_slug, parent=self.category)
+        return self.category.dataset_set.all()
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDatasetsView, self).get_context_data(**kwargs)

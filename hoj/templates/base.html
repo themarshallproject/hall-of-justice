@@ -12,16 +12,42 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="contain-to-grid">
+        <nav class="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                <h1><a href="{% url 'index' %}">Testing Criminal Justice Data</a></h1>
+                </li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li class="has-dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown">{% for item in categories.all %}
+                            <li {% if item.children %}class="has-dropdown"{% endif %}>
+                                <a href="{% url 'dataset-by-category' category=item.name|slugify %}">{{ item.name }}</a>
+                                {% if item.children %}
+                                    <ul class="dropdown">
+                                        {% for child in item.children.all %}
+                                        <li><a href="{% url 'dataset-by-category' category=item.name|slugify subcategory=child.name|slugify %}">{{ child.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>{% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </nav>
+    </div>
+    <section role="main">
         <div class="row">
-            <div class="columns large-12">
-                <h1>Testing Criminal Justice Data</h1>
-            </div>
+            <div class="columns large-12">{% block pageheader %}{% endblock %}</div>
         </div>
         <div class="row">
             <div class="columns large-12">{% block content %}{% endblock %}</div>
         </div>
-    </div>
+    </section>
 
     <script src="{% static "js/vendor/jquery.js" %}"></script>
     <script src="{% static "js/foundation.min.js" %}"></script>
