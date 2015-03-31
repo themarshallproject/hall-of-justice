@@ -5,11 +5,8 @@
                     class="typeahead" name="q"
                     value="{{ form.q.value|default:"" }}" type="search">
             </div>
-            <div class="small-2 columns">
+            <div class="small-3 columns">
                 <input type="submit" value="Search" class="button postfix">
-            </div>
-            <div class="small-1 columns">
-                <a href="{% url 'haystack_search' %}" class="button secondary postfix">Reset</a>
             </div>
     </div>
 </form>
