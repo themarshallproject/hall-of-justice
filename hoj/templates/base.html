@@ -36,16 +36,18 @@
                             </li>{% endfor %}
                         </ul>
                     </li>
+                    <li class="divider"></li>
                     <li class="has-form">
                         <select id="state-select" name="state">
-                            <option value="" {% if not location_abbr %}selected{% endif %}>--------------</option>
+                            <option value="" {% if not location_abbr %}selected{% endif %}>-- View Location --</option>
                         {% for item in state_choices %}
                             <option {% ifequal item.0 location_abbr %}selected{% endifequal %}
                             value="{% url 'datasets-by-location' location=item.0|lower %}">{{ item.1 }}</option>
                         {% endfor %}
                         </select>
                     </li>
-                    <li><a href="{% url 'haystack_search' %}">Search</a></li>
+                    <li class="divider"></li>
+                    <li class="has-form"><a class="button" href="{% url 'haystack_search' %}">Search Page</a></li>
                 </ul>
             </section>
         </nav>
