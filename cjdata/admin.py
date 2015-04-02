@@ -6,7 +6,6 @@ class CategoryAdmin(admin.ModelAdmin):
     '''
         Admin View for Category
     '''
-    prepopulated_fields = {"slug": ("name",)}
     list_display = ('path', 'name', 'parent', 'created_at', 'updated_at')
     search_fields = ['name', ]
 
