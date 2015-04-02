@@ -1,7 +1,8 @@
-from django.core.management.base import LabelCommand
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+import argparse
 
 from csv import DictReader
 import os
@@ -10,11 +11,21 @@ from cjdata.models import (Category, Dataset, STATE_NATL_LOOKUP)
 validate_url = URLValidator()
 
 
-class Command(LabelCommand):
-    args = '<filepath>'
+class Command(BaseCommand):
     help = 'Imports datasets from a particularly formatted CSV'
 
-    def handle_label(self, label, **options):
+    def add_arguments(self, parser):
+        # Positional arguments
+        parser.add_argument('filepath', nargs='?', type=argparse.FileType('r'))
+
+        # Named (optional) arguments
+        parser.add_argument('-n', '--dry-run',
+                            action='store_true',
+                            dest='dryrun',
+                            default=False,
+                            help='Run through file and output errors, but don\'t save datasets')
+
+    def handle(self, *args, **options):
         # Define some helper functions for fiing field names
         def remap_keys(item):
             '''Some fields need manual remapping to Dataset field names'''
@@ -73,46 +84,64 @@ class Command(LabelCommand):
                 except ValidationError:
                     del item['url']
 
+        fp = options.get('filepath', None)
+        save_objects = not options.get('dryrun', False)
+        verbosity = options.get('verbosity', None)
+
         # Actual script exection
-        if os.path.exists(label):
-            with open(label, 'r') as fp:
-                reader = DictReader(fp)
-                data_rows = [r for r in reader]
-                for item in data_rows:
-                    reformat_dict(item)
-                    fix_states(item)
-                    remap_keys(item)
-                    booleanize(item)
-                    fix_url(item)
-                    self.stdout.write("Title: '{}'".format(item.get('title')))
-                    if item.get('url'):
-                        self.stdout.write("\tURL: '{}'".format(item.get('url')))
-                    top_cat_name = item.pop('category', None)
-                    sub_cat_name = item.pop('subcategory', None)
-                    cat_obj = top_cat = None
-                    if top_cat_name:
-                        top_cat_name = top_cat_name.title().replace('/', ' & ')
-                        try:
-                            top_cat = Category.objects.get(name__iexact=top_cat_name, parent__isnull=True)
+        if fp:
+            reader = DictReader(fp)
+            data_rows = [r for r in reader]
+            for item in data_rows:
+                reformat_dict(item)
+                fix_states(item)
+                remap_keys(item)
+                booleanize(item)
+                fix_url(item)
+                item_title = item.get('title', None)
+                item_url = item.get('url', None)
+                item_group_name = item.get('group_name', None)
+                if verbosity > 0:
+                    if item_title:
+                        self.stdout.write("Title: '{}'".format(item_title))
+                    else:
+                        self.stderr.write("Title not provided for '{}'".format(item_url))
+                if verbosity > 0:
+                    if item_group_name:
+                        self.stdout.write("Group: '{}'".format(item_group_name))
+                    else:
+                        self.stderr.write("Group name not provided")
+                if item_url and verbosity > 1:
+                    self.stdout.write("\tURL: '{}'".format(item.get('url')))
+                top_cat_name = item.pop('category', None)
+                sub_cat_name = item.pop('subcategory', None)
+                cat_obj = top_cat = None
+                if top_cat_name:
+                    top_cat_name = top_cat_name.title().replace('/', ' & ')
+                    try:
+                        top_cat = Category.objects.get(name__iexact=top_cat_name, parent__isnull=True)
+                        if verbosity > 1:
                             self.stdout.write("\tFound '{}' category".format(top_cat_name))
-                            cat_obj = top_cat
-                        except Category.MultipleObjectsReturned:
-                            self.stderr.write("\tMultiple category matches for {}".format(top_cat_name))
-                        except Category.DoesNotExist:
-                            self.stderr.write("\tNo '{}' category".format(top_cat_name))
-                        if sub_cat_name:
-                            sub_cat_name = sub_cat_name.title().replace('/', ' & ')
-                            cat_path = "{}/{}".format(top_cat_name, sub_cat_name)
-                            try:
-                                cat_obj = Category.objects.get(name__iexact=sub_cat_name, parent=top_cat)
+                        cat_obj = top_cat
+                    except Category.MultipleObjectsReturned:
+                        self.stderr.write("\tMultiple category matches for {}".format(top_cat_name))
+                    except Category.DoesNotExist:
+                        self.stderr.write("\tNo '{}' category".format(top_cat_name))
+                    if sub_cat_name:
+                        sub_cat_name = sub_cat_name.title().replace('/', ' & ')
+                        cat_path = "{}/{}".format(top_cat_name, sub_cat_name)
+                        try:
+                            cat_obj = Category.objects.get(name__iexact=sub_cat_name, parent=top_cat)
+                            if verbosity > 1:
                                 self.stdout.write("\tFound '{}' subcategory".format(top_cat_name))
-                            except Category.MultipleObjectsReturned:
-                                self.stderr.write("\tMultiple subcategory matches for {}".format(cat_path))
-                            except Category.DoesNotExist:
-                                self.stderr.write("\tNo '{}' category.".format(cat_path))
-                    # If we don't have a title and a group_name,we probably shouldn't create an entry.
-                    if item.get('title', None) and item.get('group_name', None):
-                        dataset = None
+                        except Category.MultipleObjectsReturned:
+                            self.stderr.write("\tMultiple subcategory matches for {}".format(cat_path))
+                        except Category.DoesNotExist:
+                            self.stderr.write("\tNo '{}' category.".format(cat_path))
+                # If we don't have a title and a group_name,we probably shouldn't create an entry.
+                if item_title and item_group_name:
+                    dataset = None
+                    if save_objects:
                         with transaction.atomic():
                             dataset = Dataset.objects.create(**item)
                             if cat_obj:
@@ -122,11 +151,19 @@ class Command(LabelCommand):
                                 dataset.full_clean()
                                 dataset.save()
                             except ValidationError as e:
-                                self.stderr.write("Failed to save dataset '{}':\n\t{}".format(item.get('title', ''), str(e)))
-                                self.stderr.write("\n".join(["{}: {}".format(k,str(v)) for k,v in item.items()]))
-                        if dataset:
-                            self.stdout.write("\tCreated Dataset: {}\n".format(dataset))
+                                self.stderr.write("Failed to save dataset '{}':\n\t{}".format(item_title, str(e)))
+                                if verbosity > 2:
+                                    self.stderr.write("\n".join(["{}: {}".format(k, str(v)) for k, v in item.items()]))
                     else:
-                        self.stderr.write("\tNot enough data to create a dataset! Need at least a title and group_name")
+                        if verbosity > 0:
+                            self.stdout.write("Would create dataset: '{}'\n\n".format(item.get('title', '')))
+                    if dataset:
+                        if verbosity > 0:
+                            self.stdout.write("\tCreated Dataset: {}\n".format(dataset))
+                else:
+                    self.stderr.write("\tNot enough data to create a dataset! Need at least a title and group_name")
+                    if verbosity > 2:
+                        item_info = "\n\t".join(["{}: {}".format(k, str(v)) for k, v in item.items()])
+                        self.stderr.write(item_info)
         else:
-            self.stderr.write('File does not exist at path: {}'.format(label))
+            self.stderr.write("File path not provided. Please provide a path to a CSV file to process")
