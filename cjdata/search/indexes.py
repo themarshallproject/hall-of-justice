@@ -9,6 +9,7 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
     description = indexes.CharField(model_attr='description', boost=1.125)
     group_name = indexes.CharField(model_attr='group_name', faceted=True)
     states = indexes.FacetMultiValueField(model_attr='states')
+    division_names = indexes.FacetMultiValueField(model_attr='division_names')
     sectors = indexes.FacetMultiValueField(model_attr='sectors')
     formats = indexes.MultiValueField(model_attr='formats', boost=0.6)
 
