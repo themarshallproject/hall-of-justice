@@ -89,6 +89,9 @@ class Dataset(TimestampedModel):
     def get_states_abbr_display(self):
         return ", ".join(self.states)
 
+    def get_division_names_display(self):
+        return ", ".join(self.division_names)
+
     def get_absolute_url(self):
         return reverse('dataset-detail', args=[str(self.uuid)])
 
