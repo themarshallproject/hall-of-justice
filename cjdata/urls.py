@@ -9,7 +9,8 @@ from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView, St
 urlpatterns = patterns(
     '',
     url(r'^data/(?P<uuid>[a-f0-9-]{32,36})/$', DatasetDetailView.as_view(), name='dataset-detail'),
-    url(r'^category/(?:(?P<category>[\w-]+)/)(?:(?P<subcategory>[\w-]+)/)?$', CategoryDatasetsView.as_view(), name='datasets-by-category'),
+    url(r'^category/(?:(?P<category>[\w-]+)/)(?:(?P<subcategory>[\w-]+)/)?$',
+        CategoryDatasetsView.as_view(), name='datasets-by-category'),
     url(r'^location/(?P<location>[\w\s]+)/', StateDatasetsView.as_view(), name='datasets-by-location'),
     url(r'^search/$', search_view_factory(view_class=BetterFacetedSearchView,
                                           form_class=FacetedSearchForm,
