@@ -5,7 +5,6 @@ from django.core.validators import URLValidator
 import argparse
 
 from csv import DictReader
-import os
 from cjdata.models import (Category, Dataset, STATE_NATL_LOOKUP)
 
 validate_url = URLValidator()
@@ -36,8 +35,10 @@ class Command(BaseCommand):
                 "internet_availability": "internet_available",
                 "tag": "tags",
                 "format": "formats",
+                "sublocation": "division_names",
+                "location": "resource_location"
             }
-            array_fields = ("tags", "formats", "sectors", "states",)
+            array_fields = ("tags", "formats", "sectors", "states", "division_names")
             for old_key, new_key in mappings.items():
                 value = item.pop(old_key, None)
                 if value:

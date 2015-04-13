@@ -51,14 +51,16 @@ class Category(TimestampedModel):
 class Dataset(TimestampedModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[])
-    location = models.TextField(blank=True)
-    sublocation = models.CharField(blank=True, max_length=150)
+    division_names = ArrayField(models.CharField(max_length=150), default=[],
+                                help_text='Describes one or more geographic divisions such as a city or county')
     categories = models.ManyToManyField("Category")
     title = models.TextField()
     description = models.TextField(blank=True)
     formats = ArrayField(models.CharField(max_length=40), blank=True, default=[],
                          help_text="Enter formats, separated by commas")
     url = models.URLField(blank=True, null=True, max_length=500)
+    resource_location = models.TextField(blank=True,
+                                         help_text='Describes where in a resource to find the dataset')
     sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
                          help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas")
     group_name = models.CharField(help_text="Name of group administering dataset", max_length=150)
