@@ -1,0 +1,12 @@
+---
+- name: Install Postgres
+  hosts: hallofjustice-db
+  user: ubuntu
+  sudo: yes
+  roles:
+    - role: common-roles/common
+      hostname: db.hallofjustice.org
+    - role: common-roles/postgres
+      dbuser: "hallofjustice"
+      dbpassword: "test"
+      dbname: "hallofjustice"

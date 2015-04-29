@@ -1,0 +1,3 @@
+[submodule "provisioning/common-roles"]
+	path = provisioning/common-roles
+	url = https://github.com/sunlightlabs/ansible-common-roles.git

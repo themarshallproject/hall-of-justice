@@ -1,0 +1,11 @@
+---
+- name: Set up search.hallofjustice
+  hosts: hallofjustice-search
+  user: ubuntu
+  sudo: yes
+  roles:
+    - role: common-roles/common
+      hostname: search.hallofjustice.org
+    - role: common-roles/elasticsearch
+      major_version: 1.4
+

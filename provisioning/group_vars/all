@@ -1,0 +1,5 @@
+---
+django_environment:
+  SECRET_KEY: a-bad-secret-key
+  DATABASE_URL: postgres://hallofjustice:test@10.73.98.101:5432/hallofjustice
+  HAYSTACK_URL: http://10.73.98.102:9200/

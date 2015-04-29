@@ -28,3 +28,5 @@ sandbox/
 staticfiles/*
 !staticfiles/.gitkeep
 
+# vagrant
+.vagrant

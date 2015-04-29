@@ -1,0 +1,19 @@
+---
+- name: Set up www.hallofjustice
+  hosts: hallofjustice-site
+  user: ubuntu
+  sudo: yes
+  roles:
+    - role: common-roles/common
+      hostname: hallofjustice.org
+      extra_packages:
+        - libpq-dev # Need this for psycopg2
+    - role: common-roles/django
+      project_name: hallofjustice
+      python_version: 3
+      git_repositories:
+          - repo: https://github.com/sunlightlabs/hall-of-justice.git
+            dir: hallofjustice
+            version: HEAD
+      wsgi_module: hallofjustice.wsgi:application
+
