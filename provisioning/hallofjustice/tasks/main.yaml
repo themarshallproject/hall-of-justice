@@ -1,0 +1,14 @@
+---
+- name: migrate django project
+  django_manage: >
+    command=migrate
+    app_path=/projects/{{project_name}}/src/{{project_name}}
+    virtualenv=/projects/{{project_name}}/virt
+  environment: django_environment
+- name: collect static files
+  django_manage: >
+    command=collectstatic
+    app_path=/projects/{{project_name}}/src/{{project_name}}
+    virtualenv=/projects/{{project_name}}/virt
+  environment: django_environment
+

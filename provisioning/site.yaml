@@ -16,4 +16,6 @@
             dir: hallofjustice
             version: HEAD
       wsgi_module: hallofjustice.wsgi:application
+    - role: hallofjustice
+      project_name: hallofjustice
 
