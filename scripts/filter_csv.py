@@ -32,17 +32,16 @@ def multiple_categories(item):
     return (len(value_list) > 1)
 
 
+FILTER_MAP = {
+    'ufo-states': unidentified_states,
+    'no-title': no_title,
+    'no-group': no_group,
+    'multi-cat': multiple_categories
+}
+
 def main(args):
     filter_name = getattr(args, 'filter', None)
-    filter_func = None
-    if filter_name == 'ufo-states':
-        filter_func = unidentified_states
-    elif filter_name == 'no-title':
-        filter_func = no_title
-    elif filter_name == 'no-group':
-        filter_func = no_group
-    elif filter_name == 'multi-cat':
-        filter_func = multiple_categories
+    filter_func = FILTER_MAP.get(filter_name, None)
 
     reader = csv.DictReader(args.infile)
     fieldnames = reader.fieldnames
@@ -55,12 +54,12 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Searches a CSV file for.. stuff')
+    parser = argparse.ArgumentParser(description='Filters a CSV file using a custom set of predefined filters')
     parser.add_argument('infile', nargs='?',
                         type=argparse.FileType('r'), default=sys.stdin,
                         help='Path to the CSV file to search on')
     parser.add_argument('filter', type=str,
-                        choices=('ufo-states', 'no-title', 'no-group', 'multi-cat'),
+                        choices=sorted(FILTER_MAP.keys()),
                         help='Specify a predefined filter to run on the CSV')
     args = parser.parse_args()
     main(args)
