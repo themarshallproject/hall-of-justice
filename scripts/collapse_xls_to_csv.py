@@ -19,7 +19,7 @@ def main(args):
     else:
         logger.error("Input file should be an Excel file ending with .xls or .xlsx")
 
-    writer = csv.writer(args.outfile, quoting=csv.QUOTE_NONNUMERIC) if args.outfile else None
+    writer = csv.writer(args.outfile, quoting=csv.QUOTE_ALL) if args.outfile else None
     headers_written = False
 
     for name in sheet_names:

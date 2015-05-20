@@ -39,15 +39,21 @@ FILTER_MAP = {
     'multi-cat': multiple_categories
 }
 
+
 def main(args):
     filter_name = getattr(args, 'filter', None)
     filter_func = FILTER_MAP.get(filter_name, None)
 
+    columns = getattr(args, 'columns', None)
+
     reader = csv.DictReader(args.infile)
     fieldnames = reader.fieldnames
     filtered_items = filter(filter_func, reader) if filter_func else (r for r in reader)
+    if columns:
+        fieldnames = list(c for c in columns if c in fieldnames)
+        filtered_items = (dict((f, row[f]) for f in fieldnames if f in row) for row in filtered_items)
 
-    writer = csv.DictWriter(sys.stdout, fieldnames)
+    writer = csv.DictWriter(sys.stdout, fieldnames, quoting=csv.QUOTE_ALL)
     writer.writeheader()
     for item in filtered_items:
         writer.writerow(item)
@@ -58,7 +64,9 @@ if __name__ == '__main__':
     parser.add_argument('infile', nargs='?',
                         type=argparse.FileType('r'), default=sys.stdin,
                         help='Path to the CSV file to search on')
-    parser.add_argument('filter', type=str,
+    parser.add_argument('--columns', type=str, nargs='+',
+                        help='Column names to output')
+    parser.add_argument('--filter', type=str,
                         choices=sorted(FILTER_MAP.keys()),
                         help='Specify a predefined filter to run on the CSV')
     args = parser.parse_args()
