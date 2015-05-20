@@ -24,7 +24,11 @@
                 <dt>Sub-location</dt>
                 <dd>{{ object.get_division_names_display }}</dd>
                 <dt>Categories</dt>
-                <dd>{{ object.categories.all|join:", " }}</dd>
+                <dd>
+                    <ul>{% for cat in object.categories.all %}
+                        <li><a href="{{ cat.get_absolute_url }}">{{ cat.path }}</a></li>{% endfor %}
+                    </ul>
+                </dd>
                 <dt>Sectors (Govt, Non-Profit, etc)</dt>
                 <dd>{{ object.sectors|join:", "|default:"Not provided" }}</dd>
                 <dt>Formats</dt>

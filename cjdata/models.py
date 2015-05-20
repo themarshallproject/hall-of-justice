@@ -42,6 +42,12 @@ class Category(TimestampedModel):
         else:
             return "{o.name}".format(o=self)
 
+    def get_absolute_url(self):
+        kwargs = {'category': self.parent.slug if self.parent else self.slug}
+        if self.parent:
+            kwargs['subcategory'] = self.slug
+        return reverse('datasets-by-category', kwargs=kwargs)
+
     def __str__(self):
         if not self.path:
             return self._calculate_pathname()
