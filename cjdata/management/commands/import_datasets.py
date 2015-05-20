@@ -25,65 +25,60 @@ class Command(BaseCommand):
                             help='Run through file and output errors, but don\'t save datasets')
 
     def handle(self, *args, **options):
-        # Define some helper functions for fiing field names
-        def remap_keys(item):
-            '''Some fields need manual remapping to Dataset field names'''
-            mappings = {
-                standardize_key("Private/Government"): "sectors",
-                standardize_key("Is this data updated? (Y/N)"): "updated",
-                # "category": "categories",
-                "internet_availability": "internet_available",
-                "tag": "tags",
-                "format": "formats",
-                "sublocation": "division_names",
-                "location": "resource_location"
-            }
-            array_fields = ("tags", "formats", "sectors", "states", "division_names")
-            for old_key, new_key in mappings.items():
-                value = item.pop(old_key, None)
-                if value:
-                    if new_key in array_fields:
-                        value = [v.strip() for v in value.split(",") if v.strip() != '']
-                    item[new_key] = value
+        # Define some helper functions for fixing fields
 
-        def fix_states(item):
-            if 'state' in item:
-                value = item.pop('state', '')
-                values_set = (v.strip() for v in value.split(","))
-                values_set = ('US' if v.startswith('Nat') else v for v in values_set)
-                values_set = (v for v in values_set if v in STATE_NATL_LOOKUP.keys())
-                item['states'] = list(values_set)
+        def remap_keys(iterable, mapping):
+            '''Some fields need manual remapping to Dataset field names'''
+            for key, value in iterable:
+                if key in mapping and value:
+                    key = mapping[key]
+                yield key, value
+
+        def fields_to_lists(iterable, fields):
+            for key, value in iterable:
+                if key in fields:
+                    value = [v.strip() for v in value.split(",") if v.strip() != '']
+                yield key, value
 
         def standardize_key(k):
             '''Many fields can be fixed by lowercasing and replacing certain characters'''
             return str(k).lower().strip().replace('? (y/n)', '').replace(' ', '_').replace('/', '_')
 
-        def reformat_dict(item):
-            '''Iterate overkeys and run standardize_key'''
-            original_keys = list(item.keys())
-            for original_key in original_keys:
-                new_key = standardize_key(original_key)
-                value = item.pop(original_key, None)
+        def reformat_keys(iterable, func):
+            '''Iterate over keys and run standardize_key'''
+            for key, value in iterable:
+                new_key = func(key)
                 if value:
-                    item[new_key] = value
+                    yield new_key, value
 
-        def booleanize(item):
-            boolean_fields = ("mappable", "updated", "population_data", "internet_available")
-            for field in boolean_fields:
-                value = item.get(field, None)
-                if value:
-                    item[field] = True if value.lower().startswith('y') else False
-                else:
-                    item[field] = None
+        def booleanize(iterable, fields):
+            for key, value in iterable:
+                if value and key in fields:
+                    value = True if value.lower().startswith('y') else False
+                yield key, value
 
-        def fix_url(item):
-            if 'url' in item:
-                url = item['url'].strip()
+        def clean_url(url):
+                url = url.strip()
                 try:
                     validate_url(url)
-                    item['url'] = url
+                    return url
                 except ValidationError:
-                    del item['url']
+                    return None
+
+        def clean_states(states_list):
+            values_set = (v.strip() for v in states_list)
+            values_set = ('US' if v.startswith('Nat') else v for v in values_set)
+            values_set = (v for v in values_set if v in STATE_NATL_LOOKUP.keys())
+            return list(values_set)
+
+        def make_category_paths(cat_entry, subcat_entry):
+            category_entries = cat_entry.split(',') if cat_entry else []
+            subcategory_entries = subcat_entry.split(',') if subcat_entry else []
+            for n, cat_name in enumerate(category_entries):
+                if cat_name:
+                    subcat_name = subcategory_entries[n] if n < len(subcategory_entries) else ''
+                    cat_components = (cat_name.strip().title(), subcat_name.strip().title())
+                    yield '/'.join(cat_components) if cat_components[-1] else cat_components[0]
 
         fp = options.get('filepath', None)
         save_objects = not options.get('dryrun', False)
@@ -93,15 +88,45 @@ class Command(BaseCommand):
         if fp:
             reader = DictReader(fp)
             data_rows = [r for r in reader]
-            for item in data_rows:
-                reformat_dict(item)
-                fix_states(item)
-                remap_keys(item)
-                booleanize(item)
-                fix_url(item)
+            for row in data_rows:
+                # Reformat keys (make lowercase)
+                data_iterable = reformat_keys(row.items(), standardize_key)
+                # Remap keys to model fields
+                mapping = {
+                    standardize_key("Private/Government"): "sectors",
+                    standardize_key("Is this data updated? (Y/N)"): "updated",
+                    # "category": "categories",
+                    "internet_availability": "internet_available",
+                    "tag": "tags",
+                    "state": "states",
+                    "format": "formats",
+                    "sublocation": "division_names",
+                    "location": "resource_location"
+                }
+                data_iterable = remap_keys(data_iterable, mapping)
+                # Make list fields from strings
+                list_fields = ("tags", "formats", "sectors", "states", "division_names")
+                data_iterable = fields_to_lists(data_iterable, list_fields)
+                # Coerce select values to booleans
+                boolean_fields = ("mappable", "updated", "population_data", "internet_available")
+                data_iterable = booleanize(data_iterable, boolean_fields)
+                # Back to a dict, clean states and url
+                item = dict(data_iterable)
+                item['states'] = clean_states(item.get('states', []))
+                raw_url = item.pop('url', None)
+                if raw_url:
+                    item['url'] = clean_url(raw_url)
+
+                # Get category paths
+                category_raw = item.pop('category', None)
+                subcategory_raw = item.pop('subcategory', None)
+                category_paths = make_category_paths(category_raw, subcategory_raw)
+
+                #  Get title, url, etc.
                 item_title = item.get('title', None)
                 item_url = item.get('url', None)
                 item_group_name = item.get('group_name', None)
+
                 if verbosity > 0:
                     if item_title:
                         self.stdout.write("Title: '{}'".format(item_title))
@@ -114,40 +139,28 @@ class Command(BaseCommand):
                         self.stderr.write("Group name not provided")
                 if item_url and verbosity > 1:
                     self.stdout.write("\tURL: '{}'".format(item.get('url')))
-                top_cat_name = item.pop('category', None)
-                sub_cat_name = item.pop('subcategory', None)
-                cat_obj = top_cat = None
-                if top_cat_name:
-                    top_cat_name = top_cat_name.title().replace('/', ' & ')
+                # Handle categories and subcategories
+                categories = []
+                for cpath in category_paths:
                     try:
-                        top_cat = Category.objects.get(name__iexact=top_cat_name, parent__isnull=True)
+                        cat_obj = Category.objects.get(path=cpath)
+                        categories.append(cat_obj)
                         if verbosity > 1:
-                            self.stdout.write("\tFound '{}' category".format(top_cat_name))
-                        cat_obj = top_cat
+                            self.stdout.write("\tFound '{}' category".format(cpath))
                     except Category.MultipleObjectsReturned:
-                        self.stderr.write("\tMultiple category matches for {}".format(top_cat_name))
+                        self.stderr.write("\tMultiple category matches for {}".format(cpath))
                     except Category.DoesNotExist:
-                        self.stderr.write("\tNo '{}' category".format(top_cat_name))
-                    if sub_cat_name:
-                        sub_cat_name = sub_cat_name.title().replace('/', ' & ')
-                        cat_path = "{}/{}".format(top_cat_name, sub_cat_name)
-                        try:
-                            cat_obj = Category.objects.get(name__iexact=sub_cat_name, parent=top_cat)
-                            if verbosity > 1:
-                                self.stdout.write("\tFound '{}' subcategory".format(top_cat_name))
-                        except Category.MultipleObjectsReturned:
-                            self.stderr.write("\tMultiple subcategory matches for {}".format(cat_path))
-                        except Category.DoesNotExist:
-                            self.stderr.write("\tNo '{}' category.".format(cat_path))
+                        self.stderr.write("\tNo '{}' category".format(cpath))
                 # If we don't have a title and a group_name,we probably shouldn't create an entry.
                 if item_title and item_group_name:
                     dataset = None
                     if save_objects:
                         with transaction.atomic():
                             dataset = Dataset.objects.create(**item)
-                            if cat_obj:
-                                cat_obj.dataset_set.add(dataset)
-                                cat_obj.save()
+                            for cat_obj in categories:
+                                if verbosity > 2:
+                                    self.stdout.write("Adding dataset to category '{}'".format(cat_obj.path))
+                                dataset.categories.add(cat_obj)
                             try:
                                 dataset.full_clean()
                                 dataset.save()
