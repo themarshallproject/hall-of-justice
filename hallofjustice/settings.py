@@ -1,5 +1,5 @@
 """
-Django settings for hoj project.
+Django settings for hallofjustice project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -68,9 +68,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'hoj.urls'
+ROOT_URLCONF = 'hallofjustice.urls'
 
-WSGI_APPLICATION = 'hoj.wsgi.application'
+WSGI_APPLICATION = 'hallofjustice.wsgi.application'
 
 
 # Database
@@ -99,14 +99,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'hoj/static'),
+    os.path.join(BASE_DIR, 'hallofjustice/static'),
 )
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Templates
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'hoj/templates'),
+    os.path.join(BASE_DIR, 'hallofjustice/templates'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
