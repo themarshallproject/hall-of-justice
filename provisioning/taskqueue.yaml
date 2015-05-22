@@ -12,8 +12,8 @@
       hostname: taskqueue.hallofjustice.org
       extra_packages:
         - libpq-dev
-        - redis-server
-        - rabbitmq-server
+    - role: redis-server
+      bind_external: true
     - role: common-roles/django-celery
       project_name: hallofjustice
       python_version: 3
@@ -21,6 +21,3 @@
           - repo: https://github.com/sunlightlabs/hall-of-justice.git
             dir: hallofjustice
             version: HEAD
-    - role: hallofjustice
-      project_name: hallofjustice
-

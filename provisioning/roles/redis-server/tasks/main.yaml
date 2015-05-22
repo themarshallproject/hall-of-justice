@@ -1,0 +1,8 @@
+---
+- name: install redis
+  apt: name=redis-server update_cache=yes
+- name: bind redis to listen on external ips
+  lineinfile: dest=/etc/redis/redis.conf regexp="^bind 127\.0\.0\.1" line="# bind 127.0.0.1"
+  notify:
+    - restart redis-server
+  when: bind_external
