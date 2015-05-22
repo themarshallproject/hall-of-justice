@@ -25,6 +25,9 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
 
+    def get_updated_field(self):
+        return 'updated_at'
+
 
 class CategoryIndex(indexes.ModelSearchIndex, indexes.Indexable):
     text = EdgeNgramField(document=True, analyzer='edgengram_analyzer')
@@ -40,6 +43,9 @@ class CategoryIndex(indexes.ModelSearchIndex, indexes.Indexable):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
 
+    def get_updated_field(self):
+        return 'updated_at'
+
 
 class TagIndex(indexes.ModelSearchIndex, indexes.Indexable):
     text = MultiValueField(document=True, analyzer='edgengram_analyzer')
@@ -54,3 +60,6 @@ class TagIndex(indexes.ModelSearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
+
+    def get_updated_field(self):
+        return 'updated_at'
