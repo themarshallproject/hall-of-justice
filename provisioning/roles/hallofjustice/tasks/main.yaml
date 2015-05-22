@@ -5,10 +5,20 @@
     app_path=/projects/{{project_name}}/src/{{project_name}}
     virtualenv=/projects/{{project_name}}/virt
   environment: django_environment
+  tags:
+    - migrate
 - name: collect static files
   django_manage: >
     command=collectstatic
     app_path=/projects/{{project_name}}/src/{{project_name}}
     virtualenv=/projects/{{project_name}}/virt
   environment: django_environment
+- name: rebuild search index
+  django_manage: >
+    command="rebuild_index --noinput"
+    app_path=/projects/{{project_name}}/src/{{project_name}}
+    virtualenv=/projects/{{project_name}}/virt
+  environment: django_environment
+  tags:
+    - rebuild_index
 
