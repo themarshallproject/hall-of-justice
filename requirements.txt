@@ -1,8 +1,10 @@
 pytz>=2015.2
+celery==3.1.18
 Django>=1.8
 dj-database-url==0.3.0
 elasticsearch==1.4.0
 elasticstack==0.1.1
+eventlet>=0.17.4
 django-haystack>=2.3.1
 django-localflavor==1.1
 psycopg2==2.6

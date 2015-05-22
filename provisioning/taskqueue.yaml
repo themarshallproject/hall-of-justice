@@ -1,0 +1,26 @@
+---
+- name: Set up taskqueue.hallofjustice
+  hosts: hallofjustice-taskqueue
+  user: ubuntu
+  sudo: yes
+  vars:
+    concurrency: 2
+    worker_nodes: 2
+    celeryd_max_tasks_per_child: 500
+  roles:
+    - role: common-roles/common
+      hostname: taskqueue.hallofjustice.org
+      extra_packages:
+        - libpq-dev
+        - redis-server
+        - rabbitmq-server
+    - role: common-roles/django-celery
+      project_name: hallofjustice
+      python_version: 3
+      git_repositories:
+          - repo: https://github.com/sunlightlabs/hall-of-justice.git
+            dir: hallofjustice
+            version: HEAD
+    - role: hallofjustice
+      project_name: hallofjustice
+

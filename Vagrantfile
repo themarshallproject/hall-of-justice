@@ -23,6 +23,23 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  config.vm.define "taskqueue" do |taskqueue|
+    taskqueue.vm.network "private_network", ip: "10.73.98.103"
+    taskqueue.vm.synced_folder "./", "/projects/hallofjustice/src/hallofjustice"
+    taskqueue.vm.provider "virtualbox" do |vb|
+      vb.name = "taskqueue.hallofjustice"
+      vb.memory = 1024
+    end
+
+    taskqueue.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/taskqueue.yaml"
+      ansible.inventory_path = "provisioning/hosts.vagrant"
+      ansible.limit = "all"
+      ansible.extra_vars = { deploy_type: "vagrant" }
+      ansible.raw_arguments = ["-T 30"]
+    end
+  end
+
   config.vm.define "search" do |search|
     search.vm.network "private_network", ip: "10.73.98.102"
     search.vm.provider "virtualbox" do |vb|
