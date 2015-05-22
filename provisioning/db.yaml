@@ -4,9 +4,13 @@
   user: ubuntu
   sudo: yes
   roles:
+    - role: roles/postgres-apt-ppa
+      distro_version_name: trusty
+      signing_key: ACCC4CF8
     - role: common-roles/common
       hostname: db.hallofjustice.org
     - role: common-roles/postgres
+      pgversion: 9.4
       dbuser: "hallofjustice"
       dbpassword: "test"
       dbname: "hallofjustice"

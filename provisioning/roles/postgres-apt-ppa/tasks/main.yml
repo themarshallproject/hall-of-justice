@@ -1,0 +1,4 @@
+- name: Add PostgreSQL PPA key for {{ distro_version_name|title }}
+  apt_key: state=present id={{ signing_key }} url=https://www.postgresql.org/media/keys/{{ signing_key }}.asc
+- name: Add Postgres PPA for {{ distro_version_name|title }}
+  apt_repository: state=present update_cache=yes repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ distro_version_name }}-pgdg main'
