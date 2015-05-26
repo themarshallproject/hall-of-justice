@@ -12,6 +12,7 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
     division_names = indexes.FacetMultiValueField(model_attr='division_names')
     sectors = indexes.FacetMultiValueField(model_attr='sectors')
     formats = indexes.MultiValueField(model_attr='formats', boost=0.6)
+    tags = indexes.MultiValueField(model_attr='tags', boost=0.6)
 
     class Meta:
         model = Dataset

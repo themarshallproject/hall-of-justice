@@ -3,3 +3,4 @@
 {{ object.group_name }}
 {{ object.get_states_display }}
 {{ object.get_division_names_display }}
+{{ object.tags|join:", " }}
