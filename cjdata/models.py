@@ -3,20 +3,11 @@ from django.contrib.postgres.fields import ArrayField
 from localflavor.us.us_states import STATE_CHOICES
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
+from common.models import TimestampedModel
 import uuid
 
 STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
 STATE_NATL_LOOKUP = dict(STATE_NATL_CHOICES)
-
-
-class TimestampedModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-        get_latest_by = 'created_at'
-        ordering = ('-updated_at', '-created_at',)
 
 
 class Category(TimestampedModel):
