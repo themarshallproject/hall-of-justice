@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'localflavor',
 
     'cjdata',
+    'crawler'
 )
 
 if DEBUG:

@@ -8,6 +8,8 @@ elasticstack==0.1.1
 eventlet>=0.17.4
 django-haystack>=2.3.1
 django-localflavor==1.1
+hg+https://bitbucket.org/schinckel/django-postgres#egg=django_postgres
 psycopg2==2.6
 gunicorn==19.3.0
+requests>=2.7.0
 whitenoise==1.0.6
