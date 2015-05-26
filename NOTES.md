@@ -10,5 +10,5 @@ There is an ansible tag `rebuild_index` that is tied to the *rebuild search inde
 In your dev (Vagrant) environment, the command looks like:
 
 ```shell
-ansible-playbook -i provisioning/hosts.vagrant provisioning/site.yaml -t rebuild_index -u vagrant --private-key=.vagrant/machines/site/virtualbox/private_key -vvvv
+ansible-playbook -i provisioning/hosts.vagrant provisioning/site.yml -t rebuild_index -u vagrant --private-key=.vagrant/machines/site/virtualbox/private_key -vvvv
 ```

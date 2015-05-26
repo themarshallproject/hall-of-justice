@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
     end
 
     db.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/db.yaml"
+      ansible.playbook = "provisioning/db.yml"
       ansible.inventory_path = "provisioning/hosts.vagrant"
       ansible.limit = "all"
       ansible.extra_vars = { deploy_type: "vagrant" }
@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
     end
 
     taskqueue.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/taskqueue.yaml"
+      ansible.playbook = "provisioning/taskqueue.yml"
       ansible.inventory_path = "provisioning/hosts.vagrant"
       ansible.limit = "all"
       ansible.extra_vars = { deploy_type: "vagrant" }
@@ -48,7 +48,7 @@ Vagrant.configure(2) do |config|
     end
 
     search.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/search.yaml"
+      ansible.playbook = "provisioning/search.yml"
       ansible.inventory_path = "provisioning/hosts.vagrant"
       ansible.limit = "all"
       ansible.extra_vars = { deploy_type: "vagrant" }
@@ -64,7 +64,7 @@ Vagrant.configure(2) do |config|
     end
 
     site.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provisioning/site.yaml"
+      ansible.playbook = "provisioning/site.yml"
       ansible.inventory_path = "provisioning/hosts.vagrant"
       ansible.limit = "all"
       ansible.extra_vars = { deploy_type: "vagrant" }
