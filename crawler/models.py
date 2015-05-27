@@ -1,13 +1,16 @@
 from django.db import models
 from common.models import TimestampedModel
 from postgres.fields import JSONField  # Using schinckel/django-postgres until Django 1.9
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class URLInspection(TimestampedModel):
     url = models.URLField(max_length=500)
     response_meta = JSONField(default={})
-    valid = models.NullBooleanField(help_text='URL is valid')
     exists = models.NullBooleanField(help_text='URL resource exists')
+    last_visited = models.DateTimeField(null=True, blank=True,
+                                        help_text='Datetime when the URL was last visited')
 
     class Meta:
         verbose_name = "URL Inspection"
@@ -15,3 +18,17 @@ class URLInspection(TimestampedModel):
 
     def __str__(self):
         return "Inspection of '{}'".format(self.url)
+
+
+class RelatedObject(models.Model):
+    inspection = models.OneToOneField('URLInspection', related_name='related')
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        verbose_name = "Related Object"
+        verbose_name_plural = "Related Objects"
+
+    def __str__(self):
+        return 'URLInspection[{}] → {}'.format(self.inspection.id, self.object)
