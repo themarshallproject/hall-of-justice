@@ -38,6 +38,8 @@ Vagrant.configure(2) do |config|
       ansible.extra_vars = { deploy_type: "vagrant" }
       ansible.raw_arguments = ["-T 30"]
     end
+    # Restart celeru after synced_folder happens
+    taskqueue.vm.provision :shell, :inline => "sudo service celery-hallofjustice restart", run: "always"
   end
 
   config.vm.define "search" do |search|
@@ -70,6 +72,8 @@ Vagrant.configure(2) do |config|
       ansible.extra_vars = { deploy_type: "vagrant" }
       ansible.raw_arguments = ["-T 30"]
     end
+    # Restart uwsgi after synced_folder happens
+    site.vm.provision :shell, :inline => "sudo service uwsgi restart", run: "always"
   end
 
 end
