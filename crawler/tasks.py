@@ -14,6 +14,8 @@ def generate_url_info(url, response):
     return {
         'url': url,
         'status_code': response.status_code,
+        'is_redirect': response.is_redirect,
+        'is_permanent_redirect': response.is_permanent_redirect,
         'headers': dict(response.headers),
         'method': response.request.method if response.request else None,
         'seconds_elapsed': response.elapsed.total_seconds() if response.elapsed else None

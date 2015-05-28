@@ -28,3 +28,35 @@ def inspect_all_dataset_urls():
         tasks.append(task)
     g = group(tasks)
     return g()
+
+
+@shared_task
+def inspect_previously_bad_urls(previous_crawl_id):
+    tasks = []
+    try:
+        previous_crawl = Crawl.objects.get(id=previous_crawl_id)
+    except Crawl.DoesNotExist:
+        previous_crawl = None
+    if previous_crawl:
+        # Get URLInspections from previous_crawl that has exists=False
+        qs = previous_crawl.urlinspection_set.filter(exists=False)
+        note_text = "Closer inspection of 'bad' urls from previous crawl with id {}".format(previous_crawl_id)
+        crawl = Crawl.objects.create(notes=note_text, related_crawl_id=previous_crawl_id)
+        for obj in qs:
+            obj_info = {
+                'app_label': 'cjdata',
+                'model': 'dataset',
+                'id': obj.id,
+                'crawl_id': crawl.id
+            }
+            task = inspect_url.subtask((obj.url,),
+                                       {
+                                        'method': 'GET',
+                                        'related_object': obj_info
+                                        },
+                                       countdown=2)
+            tasks.append(task)
+        g = group(tasks)
+        return g()
+    else:
+        return None
