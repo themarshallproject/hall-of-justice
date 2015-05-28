@@ -1,7 +1,7 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 import requests
-import datetime
+from django.utils import timezone
 from django.db import DatabaseError
 from django.contrib.contenttypes.models import ContentType
 from crawler.models import (URLInspection, RelatedObject)
@@ -21,8 +21,9 @@ def generate_url_info(url, response):
 
 
 @shared_task
-def request_url(url, method='GET'):
-    response = requests.request(method, url)
+def request_url(url, method='GET', verify_ssl=False):
+    '''Request a url. Defaults to not verifying SSL and using the 'GET' http method'''
+    response = requests.request(method, url, verify=verify_ssl)
     info = generate_url_info(url, response)
 
     return info
@@ -39,8 +40,12 @@ def request_url_options(url):
 def inspect_url(url, method='HEAD', related_object=None):
     logger.info('Inspecting URL: {}'.format(url))
     info = request_url(url, method=method)
+    result = info.copy()
+    crawl_id = related_object.get('crawl_id', None) if related_object else None
     try:
-        inspection = URLInspection.objects.create(url=url, response_meta=info)
+        inspection = URLInspection.objects.create(url=url,
+                                                  response_meta=info,
+                                                  crawl_id=crawl_id)
     except DatabaseError as e:
         logger.exception(e)
         return
@@ -48,7 +53,7 @@ def inspect_url(url, method='HEAD', related_object=None):
     if status_code:
         inspection.exists = True if int(status_code) == 200 else False
         if inspection.exists:
-            inspection.last_visited = datetime.datetime.now()
+            inspection.last_visited = timezone.now()
     if related_object:
         try:
             app_label = related_object.get('app_label', None)
@@ -58,12 +63,12 @@ def inspect_url(url, method='HEAD', related_object=None):
             RelatedObject.objects.create(inspection=inspection,
                                          content_type=content_type,
                                          object_id=object_id)
-            info['related_object'] = related_object
+            result['related_object'] = related_object
         except Exception as e:
             logger.exception(e)
 
     inspection.save()
 
-    info['inspection_id'] = inspection.id
+    result['inspection_id'] = inspection.id
 
-    return info
+    return result
