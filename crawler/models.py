@@ -5,7 +5,19 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
+class Crawl(TimestampedModel):
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Crawl"
+        verbose_name_plural = "Crawls"
+
+    def __str__(self):
+        return self.id
+
+
 class URLInspection(TimestampedModel):
+    crawl = models.ForeignKey('Crawl', blank=True, null=True, on_delete=models.SET_NULL)
     url = models.URLField(max_length=500)
     response_meta = JSONField(default={})
     exists = models.NullBooleanField(help_text='URL resource exists')
@@ -32,3 +44,4 @@ class RelatedObject(models.Model):
 
     def __str__(self):
         return 'URLInspection[{}] → {}'.format(self.inspection.id, self.object)
+
