@@ -1,0 +1,57 @@
+---
+- name: Site admin
+  hosts: hallofjustice-site
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - name: Restart nginx
+      service: name=nginx state=restarted
+      tags:
+        - website-restart
+    - name: Restart django-application (uwsgi)
+      service: name=nginx state=restarted
+      tags:
+        - website-restart
+
+- name: Search admin
+  hosts: hallofjustice-search
+  user: ubuntu
+  sudo: yes
+  tasks:
+    # - name: Rebuild search index
+    #   service: name=nginx state=restarted
+    #   tags:
+    #     - search-rebuild
+    # - name: Restart django-application (uwsgi)
+    #   service: name=nginx state=restarted
+    #   tags:
+    #     - search-restart
+
+
+- name: taskqueue admin
+  hosts: hallofjustice-taskqueue
+  user: ubuntu
+  sudo: yes
+  tasks:
+  - name: Restart celery
+    service: name=celery-hallofjustice state=restarted
+    tags:
+      - taskqueue-restart
+
+- name: Project user niceties
+  hosts:
+    - hallofjustice-site
+    - hallofjustice-search
+  user: ubuntu
+  sudo: yes
+  vars:
+    project_name: hallofjustice
+  tasks:
+    - name: pip install ipython
+      pip: >
+        name=ipython
+        state=present
+        virtualenv=/projects/{{project_name}}/virt
+      environment: django_environment
+      tags:
+        - ipython-virtualenv
