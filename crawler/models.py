@@ -7,13 +7,15 @@ from django.contrib.contenttypes.models import ContentType
 
 class Crawl(TimestampedModel):
     notes = models.TextField(blank=True)
+    related_crawl = models.ForeignKey('self', blank=True, null=True)
 
     class Meta:
+        get_latest_by = 'created_at'
         verbose_name = "Crawl"
         verbose_name_plural = "Crawls"
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class URLInspection(TimestampedModel):
@@ -25,6 +27,7 @@ class URLInspection(TimestampedModel):
                                         help_text='Datetime when the URL was last visited')
 
     class Meta:
+        get_latest_by = 'created_at'
         verbose_name = "URL Inspection"
         verbose_name_plural = "URL Inspections"
 
@@ -39,6 +42,7 @@ class RelatedObject(models.Model):
     object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
+        get_latest_by = 'created_at'
         verbose_name = "Related Object"
         verbose_name_plural = "Related Objects"
 

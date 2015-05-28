@@ -74,6 +74,7 @@ class Dataset(TimestampedModel):
     access_type = models.CharField(blank=True, max_length=50)
 
     class Meta:
+        get_latest_by = 'created_at'
         verbose_name = "Dataset"
         verbose_name_plural = "Datasets"
         ordering = ['-updated_at', 'url']

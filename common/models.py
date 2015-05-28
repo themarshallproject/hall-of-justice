@@ -7,5 +7,3 @@ class TimestampedModel(models.Model):
 
     class Meta:
         abstract = True
-        get_latest_by = 'created_at'
-        ordering = ('-updated_at', '-created_at',)
