@@ -52,7 +52,8 @@ def inspect_previously_bad_urls(previous_crawl_id):
             task = inspect_url.subtask((obj.url,),
                                        {
                                         'method': 'GET',
-                                        'related_object': obj_info
+                                        'related_object': obj_info,
+                                        'stream': True
                                         },
                                        countdown=2)
             tasks.append(task)

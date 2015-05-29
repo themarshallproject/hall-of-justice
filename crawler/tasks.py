@@ -16,10 +16,29 @@ def generate_url_info(url, response):
         'status_code': response.status_code,
         'is_redirect': response.is_redirect,
         'is_permanent_redirect': response.is_permanent_redirect,
+        'url_history': [h.url for h in response.history],
+        'final_url': response.url,
         'headers': dict(response.headers),
         'method': response.request.method if response.request else None,
         'seconds_elapsed': response.elapsed.total_seconds() if response.elapsed else None
     }
+
+
+@shared_task
+def stream_url_bytes(url, amt=16, timeout=(9.05, 12.05), verify_ssl=False):
+    '''
+    Attempt a connection to a URL and read a few bytes from the stream.
+    This is meant to provide an alternative to running a regular GET request on
+    a URL that points to a (possibly large) file.
+    '''
+    response = requests.get(url, stream=True, timeout=timeout, verify=verify_ssl)
+    content = response.raw.read(amt=amt)
+    info = generate_url_info(url, response)
+    info['streamed_response'] = True
+    info['has_content'] = True if content else False
+    response.close()
+
+    return info
 
 
 @shared_task
@@ -39,9 +58,9 @@ def request_url_options(url):
 
 
 @shared_task
-def inspect_url(url, method='HEAD', related_object=None):
+def inspect_url(url, method='HEAD', related_object=None, stream=False):
     logger.info('Inspecting URL: {}'.format(url))
-    info = request_url(url, method=method)
+    info = stream_url_bytes(url) if stream else request_url(url, method=method)
     result = info.copy()
     crawl_id = related_object.get('crawl_id', None) if related_object else None
     try:
