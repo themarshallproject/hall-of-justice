@@ -1,4 +1,4 @@
-from haystack.management.commands import update_index
+from haystack.management.commands import update_index, rebuild_index
 from celery import shared_task, group
 from crawler.tasks import inspect_url
 from crawler.models import Crawl
@@ -8,6 +8,11 @@ from cjdata.models import Dataset
 @shared_task
 def update_search_index(age=24):
     update_index.Command().handle(using=['default'], age=age)
+
+
+@shared_task
+def rebuild_search_index(age=None):
+    rebuild_index.Command().handle(using=['default'], age=None)
 
 
 @shared_task

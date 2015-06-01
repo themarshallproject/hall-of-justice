@@ -17,6 +17,7 @@
     - role: common-roles/django-celery
       project_name: hallofjustice
       python_version: 3
+      celerybeat_enabled: yes
       git_repositories:
           - repo: https://github.com/sunlightlabs/hall-of-justice.git
             dir: hallofjustice
