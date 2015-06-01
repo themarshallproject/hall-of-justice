@@ -29,6 +29,7 @@ Vagrant.configure(2) do |config|
     taskqueue.vm.provider "virtualbox" do |vb|
       vb.name = "taskqueue.hallofjustice"
       vb.memory = 1024
+      vb.cpus = 2
     end
 
     taskqueue.vm.provision "ansible" do |ansible|
