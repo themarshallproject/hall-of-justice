@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Crawl # {{ object.id }} | {{ object.created_at }}</h2>
+    <h3>Notes</h3>
+    <p>{{ object.notes }}</p>
+    <h3>Summary</h3>
+    <dl>
+        <dt># URLs Inspected</dt>
+        <dd>{{ object.urlinspection_set.count }}</dd>
+    </dl>
+    {% include "crawler/_pagination_links.html" %}
+    <table>
+        <caption>URL Inspections</caption>
+        <thead>
+            <tr>
+                <th></th>
+                <th>URL</th>
+                <th>Status Code</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for insp in object_list %}
+            <tr>
+                <td><a href="{{ insp.get_absolute_url }}">Details</a></td>
+                <td>{{ insp.url|urlizetrunc:50 }}</td>
+                <td>{{ insp.response_meta.status_code }}</td>
+                <td>{{ insp.created_at|date:"SHORT_DATETIME_FORMAT" }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include "crawler/_pagination_links.html" %}
+{% endblock content %}

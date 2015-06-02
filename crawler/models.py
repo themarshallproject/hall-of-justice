@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 from common.models import TimestampedModel
 from postgres.fields import JSONField  # Using schinckel/django-postgres until Django 1.9
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -17,6 +18,9 @@ class Crawl(TimestampedModel):
     def __str__(self):
         return str(self.id)
 
+    def get_absolute_url(self):
+        return reverse('crawl-detail', kwargs={'pk': self.pk})
+
 
 class URLInspection(TimestampedModel):
     crawl = models.ForeignKey('Crawl', blank=True, null=True, on_delete=models.SET_NULL)
@@ -33,6 +37,9 @@ class URLInspection(TimestampedModel):
 
     def __str__(self):
         return "Inspection of '{}'".format(self.url)
+
+    def get_absolute_url(self):
+        return reverse('urlinspection-detail', kwargs={'pk': self.pk})
 
 
 class RelatedObject(models.Model):

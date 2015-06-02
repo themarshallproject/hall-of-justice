@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+<style type="text/css" media="screen">
+    .header-name {
+        text-align: right;
+    }
+</style>
+{% endblock extrahead %}
+
+{% block content %}
+    <h2>URL Inspection #{{ object.id }} | {{ object.created_at }}</h2>
+
+    <dl>
+        <dt>URL</dt>
+        <dd>{{ object.url|urlize }}</dd>
+        <dt>HTTP Status Code</dt>
+        <dd>{{ object.response_meta.status_code|default:'Not Recorded' }}</dd>
+    </dl>
+
+    <table>
+        <caption>Response Headers</caption>
+        <thead>
+            <tr>
+                <th class="header-name">Header</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>{% for key,value in object.response_meta.headers.items %}
+            <tr>
+                <th class="header-name">{{ key|upper }}</th>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

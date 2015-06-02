@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <caption>URL Crawls</caption>
+        <thead>
+            <tr>
+                <th>Crawl id</th>
+                <th>Notes</th>
+                <th>Related Crawl</th>
+                <th>Link</th>
+                <th>Created at</th>
+            </tr>
+        </thead>
+        <tbody>{% for object in object_list %}
+            <tr>
+                <td>{{ object.id }}</td>
+                <td>{{ object.notes|truncatewords:40 }}</td>
+                <td><a href="{{ object.related_crawl.get_absolute_url }}">{{ object.related_crawl }}</a></td>
+                <td><a href="{{ object.get_absolute_url }}">Detail</a></td>
+                <td>{{ object.created_at }}</td>
+            </tr>
+{% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
