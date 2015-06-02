@@ -9,7 +9,7 @@
       tags:
         - website-restart
     - name: Restart django-application (uwsgi)
-      service: name=nginx state=restarted
+      service: name=uwsgi state=restarted
       tags:
         - website-restart
 
@@ -23,7 +23,7 @@
     #   tags:
     #     - search-rebuild
     # - name: Restart django-application (uwsgi)
-    #   service: name=nginx state=restarted
+    #   service: name=uwsgi state=restarted
     #   tags:
     #     - search-restart
 
@@ -55,3 +55,16 @@
       environment: django_environment
       tags:
         - ipython-virtualenv
+    - name: install django-debug-toolbar
+      pip: name=django-debug-toolbar virtualenv=/projects/{{project_name}}/virt/
+      sudo_user: "{{project_name}}"
+      tags:
+        - debug-toolbar
+    - name: set DEBUG env var in uwsgi
+      lineinfile: dest=/etc/uwsgi/apps-enabled/{{project_name}}.ini state=present insertafter=EOF line="env = DEBUG=True"
+      tags:
+        - debug-toolbar
+    - name: set DEBUG env var for user
+      lineinfile: dest=/projects/{{project_name}}/env_vars state=present insertafter=EOF line="export DEBUG=True"
+      tags:
+        - debug-toolbar
