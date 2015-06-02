@@ -1,7 +1,7 @@
 from haystack import indexes
 from elasticstack.fields import EdgeNgramField, MultiValueField
 from cjdata.models import Dataset, Category
-import datetime
+from django.utils import timezone
 
 
 class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
@@ -24,7 +24,7 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
+        return self.get_model().objects.filter(updated_at__lte=timezone.now())
 
     def get_updated_field(self):
         return 'updated_at'
@@ -42,7 +42,7 @@ class CategoryIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
+        return self.get_model().objects.filter(updated_at__lte=timezone.now())
 
     def get_updated_field(self):
         return 'updated_at'
@@ -60,7 +60,7 @@ class TagIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.filter(updated_at__lte=datetime.datetime.now())
+        return self.get_model().objects.filter(updated_at__lte=timezone.now())
 
     def get_updated_field(self):
         return 'updated_at'
