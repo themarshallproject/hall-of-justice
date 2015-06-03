@@ -8,6 +8,7 @@ from django.conf import settings
 
 import haystack
 from haystack.backends.elasticsearch_backend import ElasticsearchSearchEngine
+from haystack.backends import log_query
 from haystack.constants import DJANGO_CT
 from haystack.exceptions import MissingDependency
 from haystack.utils import get_model_ct
@@ -258,6 +259,17 @@ class SimpleESBackend(ConfigurableElasticBackend):
                 kwargs['query']['filtered']["filter"] = {"bool": {"must": filters}}
 
         return kwargs
+
+    @log_query
+    def analyze_text(self, query_string, analyzer=None):
+        '''Analyze body string with an analyzer'''
+        kwargs = {
+            'body': query_string,
+            'index': self.index_name
+        }
+        if analyzer:
+            kwargs['analyzer'] = analyzer
+        return self.conn.indices.analyze(**kwargs)
 
 
 class SimpleESSearchEngine(ElasticsearchSearchEngine):

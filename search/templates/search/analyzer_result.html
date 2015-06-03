@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Search analysis</h1>
+    <p>Displays how the search tool analyzes strings to improve search results.</p>
+    <h2>Query: <strong>{{ query }}</strong></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Original String</th>
+                <th>Search Token</th>
+                <th>Type</th>
+                <th>"Position"</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for t in tokens|dictsort:'position' %}
+            <tr>
+                <td>{{ t.original_string }}</td>
+                <td>{{ t.token }}</td>
+                <td>{{ t.type }}</td>
+                <td>{{ t.position }}</td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
