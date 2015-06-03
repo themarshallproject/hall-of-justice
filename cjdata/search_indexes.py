@@ -1,1 +1,0 @@
-from cjdata.search.indexes import (DatasetIndex, CategoryIndex, TagIndex)

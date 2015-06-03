@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'localflavor',
 
     'cjdata',
+    'search',
     'crawler'
 )
 
@@ -126,21 +127,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
+        'ENGINE': 'search.backends.SimpleESSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice',
-        'EXCLUDED_INDEXES': ['cjdata.search_indexes.CategoryIndex', 'cjdata.search_indexes.TagIndex']
+        'EXCLUDED_INDEXES': ['search.search_indexes.CategoryIndex', 'search.search_indexes.TagIndex']
     },
     'autocomplete': {
-        'ENGINE': 'cjdata.search.backends.SimpleESSearchEngine',
+        'ENGINE': 'search.backends.SimpleESSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice_autocomplete',
-        'EXCLUDED_INDEXES': ['cjdata.search_indexes.DatasetIndex']
+        'EXCLUDED_INDEXES': ['search.search_indexes.DatasetIndex']
     }
 }
-# HAYSTACK_ROUTERS = ['cjdata.search.routers.CJRouter', 'haystack.routers.DefaultRouter']
+# HAYSTACK_ROUTERS = ['search.routers.CJRouter', 'haystack.routers.DefaultRouter']
 
-ELASTICSEARCH_INDEX_SETTINGS = import_string('cjdata.search.settings.DATASET_INDEX_SETTINGS')
+ELASTICSEARCH_INDEX_SETTINGS = import_string('search.settings.DATASET_INDEX_SETTINGS')
 ELASTICSEARCH_DEFAULT_ANALYZER = 'cjdata_analyzer'
 ELASTICSEARCH_MINIMUM_SHOULD_MATCH = '80%'
 

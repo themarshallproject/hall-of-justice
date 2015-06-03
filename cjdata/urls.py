@@ -2,8 +2,8 @@ from django.conf.urls import patterns, url
 from haystack.forms import FacetedSearchForm
 from haystack.views import search_view_factory
 
-from cjdata.search.query import sqs
-from cjdata.search.views import (BetterFacetedSearchView, AutocompleteView,)
+from search.query import sqs
+from search.views import (BetterFacetedSearchView, AutocompleteView,)
 from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView, StateDatasetsView)
 
 urlpatterns = patterns(

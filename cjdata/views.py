@@ -2,7 +2,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
-from cjdata.search.query import sqs
+from search.query import sqs
 
 
 class IndexView(TemplateView):
