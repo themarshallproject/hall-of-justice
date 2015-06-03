@@ -6,6 +6,8 @@
                 {{ category.path }}
             {% elif location %}
                 {{ location }}
+            {% else %}
+            'No categories'
             {% endif %}
         {% endspaceless %}</h1>
 {% endblock pageheader %}

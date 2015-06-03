@@ -1,6 +1,5 @@
 from django.views.generic import DetailView, ListView, TemplateView
 from django.shortcuts import get_object_or_404
-from django.http import Http404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
 from search.query import sqs
 
@@ -27,14 +26,17 @@ class CategoryDatasetsView(ListView):
     def get_queryset(self):
         cat_slug = self.kwargs.get('category', None)
         subcat_slug = self.kwargs.get('subcategory', None)
-        self.category = get_object_or_404(Category, slug=cat_slug, parent__isnull=True)
-        if subcat_slug:
-            self.category = get_object_or_404(Category, slug=subcat_slug, parent=self.category)
-        return self.category.dataset_set.all()
+        if cat_slug != 'none':
+            self.category = get_object_or_404(Category, slug=cat_slug, parent__isnull=True)
+            if subcat_slug:
+                self.category = get_object_or_404(Category, slug=subcat_slug, parent=self.category)
+            return self.category.dataset_set.all()
+        else:
+            return Dataset.objects.filter(categories__isnull=True)
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDatasetsView, self).get_context_data(**kwargs)
-        context['category'] = self.category
+        context['category'] = getattr(self, 'category', None)
         return context
 
 
