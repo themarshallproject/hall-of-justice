@@ -22,7 +22,8 @@ cj_synonyms = [
     "restitution,victim compensation,compensation",
     "juvenile delinquent,juvenile,delinquent",
     "parole,probation",
-    "part i crime,index crime"
+    "part 1 crime,index crime",
+    "k9,canine=>dog"
 ]
 cj_synonyms.extend(STATES_SYNONYMS)
 
