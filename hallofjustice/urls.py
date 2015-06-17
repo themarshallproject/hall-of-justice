@@ -4,9 +4,10 @@ from django.conf import settings
 
 urlpatterns = patterns('',
 
-    (r'^', include('cjdata.urls')),
-    (r'^reports/', include('crawler.urls')),
+    url(r'^', include('cjdata.urls')),
+    url(r'^reports/', include('crawler.urls')),
 
+    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^admin/', include(admin.site.urls)),
 )
 

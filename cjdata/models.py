@@ -49,7 +49,7 @@ class Dataset(TimestampedModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[])
     division_names = ArrayField(models.CharField(max_length=150), default=[],
-                                help_text='Describes one or more geographic divisions such as a city or county')
+                                help_text='Describes one or more geographic divisions such as a city or county.')
     categories = models.ManyToManyField("Category")
     title = models.TextField()
     description = models.TextField(blank=True)
@@ -57,21 +57,25 @@ class Dataset(TimestampedModel):
                          help_text="Enter formats, separated by commas")
     url = models.URLField(blank=True, null=True, max_length=500)
     resource_location = models.TextField(blank=True,
-                                         help_text='Describes where in a resource to find the dataset')
+                                         help_text='Describes where in a resource to find the dataset.')
     sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
-                         help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas")
+                         help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas.")
     group_name = models.CharField(help_text="Name of group administering dataset", max_length=150)
     associated_legislation = models.TextField(blank=True)
-    internet_available = models.NullBooleanField()
-    population_data = models.NullBooleanField()
-    mappable = models.NullBooleanField()
-    updated = models.NullBooleanField()
-    frequency = models.CharField(blank=True, max_length=50)
-    data_range = models.CharField(blank=True, max_length=100)
-    associated_grant = models.TextField(blank=True)
+    internet_available = models.NullBooleanField(help_text="Is this dataset available online?")
+    population_data = models.NullBooleanField(help_text="Does this dataset include population data?")
+    mappable = models.NullBooleanField(help_text="Can the information be put on a map, i.e. a crime map?")
+    updated = models.NullBooleanField(help_text="Does this resource get updated?")
+    frequency = models.CharField(blank=True, max_length=50,
+                                 help_text="How often this resource is updated.")
+    data_range = models.CharField(blank=True, max_length=100,
+                                  help_text="Human-readable description of the time period covered in the data.")
+    associated_grant = models.TextField(blank=True,
+                                        help_text="Name of associated grant that funds the dataset, if available.")
     tags = ArrayField(models.CharField(max_length=50), blank=True, default=[],
                       help_text="Tags, separated by commas")
-    access_type = models.CharField(blank=True, max_length=50)
+    access_type = models.CharField(blank=True, max_length=50,
+                                   help_text="Description of how data can be accessed, and if it is machine readable.")
 
     class Meta:
         get_latest_by = 'created_at'

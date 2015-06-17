@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 import dj_database_url
 from django.utils.module_loading import import_string
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -36,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli',  # for better admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -111,17 +113,15 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'hallofjustice/templates'),
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "cjdata.context_processors.main_categories",
-    "cjdata.context_processors.state_choices",
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+    'cjdata.context_processors.main_categories',
+    'cjdata.context_processors.state_choices',
 )
+
+# Admin
+
+GRAPPELLI_ADMIN_TITLE = 'Hall of Justice'
 
 # Haystack configuration
 
