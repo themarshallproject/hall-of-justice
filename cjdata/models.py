@@ -47,36 +47,44 @@ class Category(TimestampedModel):
 
 class Dataset(TimestampedModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[])
+    # General
+    title = models.TextField()
+    url = models.URLField(blank=True, null=True, max_length=500)
+    description = models.TextField(blank=True)
+    group_name = models.CharField(db_index=True, max_length=150,
+                                  help_text="Name of group administering dataset.")
+    categories = models.ManyToManyField("Category")
+    tags = ArrayField(models.CharField(max_length=50), blank=True, default=[],
+                      help_text="Tags, separated by commas.")
+    # Location
+    states = ArrayField(models.CharField(choices=STATE_NATL_CHOICES, max_length=2), default=[],
+                        help_text="List of state abbreviations: NC, CA, PA, etc. Use 'US' for a national dataset")
     division_names = ArrayField(models.CharField(max_length=150), default=[],
                                 help_text='Describes one or more geographic divisions such as a city or county.')
-    categories = models.ManyToManyField("Category")
-    title = models.TextField()
-    description = models.TextField(blank=True)
-    formats = ArrayField(models.CharField(max_length=40), blank=True, default=[],
-                         help_text="Enter formats, separated by commas")
-    url = models.URLField(blank=True, null=True, max_length=500)
+    # Resource Information
     resource_location = models.TextField(blank=True,
                                          help_text='Describes where in a resource to find the dataset.')
-    sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
-                         help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas.")
-    group_name = models.CharField(db_index=True, max_length=150,
-                                  help_text="Name of group administering dataset")
-    associated_legislation = models.TextField(blank=True)
-    internet_available = models.NullBooleanField(help_text="Is this dataset available online?")
-    population_data = models.NullBooleanField(help_text="Does this dataset include population data?")
-    mappable = models.NullBooleanField(help_text="Can the information be put on a map, i.e. a crime map?")
     updated = models.NullBooleanField(help_text="Does this resource get updated?")
     frequency = models.CharField(blank=True, max_length=50,
                                  help_text="How often this resource is updated.")
+    sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
+                         help_text="Sectors responsible for the data resource, such as \
+                                    'Private' or 'Government' or 'Non-Profit', separated by commas.")
+    # Data Properties
+    mappable = models.NullBooleanField(help_text="Can the information be put on a map, i.e. a crime map?")
+    population_data = models.NullBooleanField(help_text="Does this dataset include population data?")
+    formats = ArrayField(models.CharField(max_length=40), blank=True, default=[],
+                         help_text="Enter formats, separated by commas")
     data_range = models.CharField(blank=True, max_length=100,
                                   help_text="Human-readable description of the time period covered in the data.")
-    associated_grant = models.TextField(blank=True,
-                                        help_text="Name of associated grant that funds the dataset, if available.")
-    tags = ArrayField(models.CharField(max_length=50), blank=True, default=[],
-                      help_text="Tags, separated by commas")
+    # Availability
+    internet_available = models.NullBooleanField(help_text="Is this dataset available online?")
     access_type = models.CharField(blank=True, max_length=50,
                                    help_text="Description of how data can be accessed, and if it is machine readable.")
+    # Associated Information
+    associated_legislation = models.TextField(blank=True)
+    associated_grant = models.TextField(blank=True,
+                                        help_text="Name of associated grant that funds the dataset, if available.")
 
     class Meta:
         get_latest_by = 'created_at'
