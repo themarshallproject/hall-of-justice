@@ -60,7 +60,8 @@ class Dataset(TimestampedModel):
                                          help_text='Describes where in a resource to find the dataset.')
     sectors = ArrayField(models.CharField(max_length=40), blank=True, default=[],
                          help_text="Sectors such as 'Private' or 'Government' or 'Non-Profit', separated by commas.")
-    group_name = models.CharField(help_text="Name of group administering dataset", max_length=150)
+    group_name = models.CharField(db_index=True, max_length=150,
+                                  help_text="Name of group administering dataset")
     associated_legislation = models.TextField(blank=True)
     internet_available = models.NullBooleanField(help_text="Is this dataset available online?")
     population_data = models.NullBooleanField(help_text="Does this dataset include population data?")
