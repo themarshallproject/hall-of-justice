@@ -7,9 +7,6 @@ jQuery(document).ready(function($) {
     function extractLast( term ) {
         return split( term ).pop();
     }
-    function quoteTerm( term ) {
-        return '"' + term + '"';
-    }
     var input_id = "input.autocomplete";
     $(input_id).on('input', function(event) {
         if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
@@ -19,7 +16,7 @@ jQuery(document).ready(function($) {
         minLength: 3,
         source: function(request, response) {
             var lastTerm = extractLast(request.term);
-            // console.log("request.term: " + lastTerm);
+            console.log("request.term: " + lastTerm);
             $.getJSON(searchURL, {
                 q: extractLast(request.term)
             })
@@ -40,7 +37,7 @@ jQuery(document).ready(function($) {
             // remove the current input
             terms.pop();
             // add the selected item
-            terms.push( quoteTerm(ui.item.value) );
+            terms.push( ui.item.value );
             // add placeholder to get the comma-and-space at the end
             terms.push( "" );
             this.value = terms.join( ", " );
