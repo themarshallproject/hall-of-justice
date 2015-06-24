@@ -54,13 +54,6 @@ INSTALLED_APPS = (
     'crawler'
 )
 
-if DEBUG:
-    try:
-        import debug_toolbar
-        INSTALLED_APPS += ('debug_toolbar',)
-    except ImportError:
-        pass
-
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -127,13 +120,13 @@ GRAPPELLI_ADMIN_TITLE = 'Hall of Justice'
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'search.backends.SimpleESSearchEngine',
+        'ENGINE': 'search.backends.PliableSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice',
         'EXCLUDED_INDEXES': ['search.search_indexes.CategoryIndex', 'search.search_indexes.TagIndex']
     },
     'autocomplete': {
-        'ENGINE': 'search.backends.SimpleESSearchEngine',
+        'ENGINE': 'search.backends.PliableSearchEngine',
         'URL': os.getenv('HAYSTACK_URL', 'http://127.0.0.1:9200/'),
         'INDEX_NAME': 'hall_of_justice_autocomplete',
         'EXCLUDED_INDEXES': ['search.search_indexes.DatasetIndex']
@@ -146,3 +139,19 @@ ELASTICSEARCH_DEFAULT_ANALYZER = 'cjdata_analyzer'
 ELASTICSEARCH_MINIMUM_SHOULD_MATCH = '80%'
 
 # See celeryconfig.py for Celery settings
+
+
+# Debug overrides
+
+if DEBUG:
+    try:
+        import debug_toolbar
+        INSTALLED_APPS += ('debug_toolbar',)
+    except ImportError:
+        pass
+    try:
+        import django_pdb
+        INSTALLED_APPS = ('django_pdb',) + INSTALLED_APPS
+        MIDDLEWARE_CLASSES += ('django_pdb.middleware.PdbMiddleware',)
+    except ImportError:
+        pass
