@@ -20,13 +20,13 @@ except ImportError:
     raise MissingDependency("The 'elasticsearch' backend requires the installation of 'elasticsearch'. Please refer to the documentation.")
 
 
-class SimpleESBackend(ConfigurableElasticBackend):
-    """An attempt at a custom simple ES search using simpler query syntax."""
+class PliableSearchBackend(ConfigurableElasticBackend):
+    """Search that supports Elasticsearch synonyms, possibly more."""
 
     DEFAULT_MINIMUM_MATCH = '50%'
 
     def __init__(self, *args, **kwargs):
-        super(SimpleESBackend, self).__init__(*args, **kwargs)
+        super(PliableSearchBackend, self).__init__(*args, **kwargs)
         user_minimum_match = getattr(settings, 'ELASTICSEARCH_MINIMUM_SHOULD_MATCH', None)
         if user_minimum_match:
             setattr(self, 'DEFAULT_MINIMUM_MATCH', user_minimum_match)
@@ -272,5 +272,5 @@ class SimpleESBackend(ConfigurableElasticBackend):
         return self.conn.indices.analyze(**kwargs)
 
 
-class SimpleESSearchEngine(ElasticsearchSearchEngine):
-    backend = SimpleESBackend
+class PliableSearchEngine(ElasticsearchSearchEngine):
+    backend = PliableSearchBackend
