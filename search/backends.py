@@ -8,6 +8,7 @@ from django.conf import settings
 
 import haystack
 from haystack.backends.elasticsearch_backend import ElasticsearchSearchEngine
+from haystack.constants import DEFAULT_OPERATOR
 from haystack.backends import log_query
 from haystack.constants import DJANGO_CT
 from haystack.exceptions import MissingDependency
@@ -21,6 +22,7 @@ except ImportError:
 
 
 class PliableSearchBackend(ConfigurableElasticBackend):
+
     """Search that supports Elasticsearch synonyms, possibly more."""
 
     DEFAULT_MINIMUM_MATCH = '50%'
@@ -45,6 +47,18 @@ class PliableSearchBackend(ConfigurableElasticBackend):
             kwargs = {
                 'query': {
                     "match_all": {},
+                },
+            }
+        elif query_string.startswith('(') and query_string.endswith(')'):
+            kwargs = {
+                'query': {
+                    'query_string': {
+                        'default_field': content_field,
+                        'default_operator': DEFAULT_OPERATOR,
+                        'query': query_string,
+                        'analyze_wildcard': True,
+                        'auto_generate_phrase_queries': True,
+                    },
                 },
             }
         else:

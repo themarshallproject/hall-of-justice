@@ -1,11 +1,15 @@
 <form id="search" method="get" action="{% url 'haystack_search' %}">
     <div class="row collapse">
-            <div class="small-9 columns">
+            <div class="small-8 columns">
                 <input class="autocomplete" autocomplete="off" id="id_q"
                     class="typeahead" name="q"
                     value="{{ form.q.value|default:"" }}" type="search">
             </div>
-            <div class="small-3 columns">
+            <div class="small-2 columns">
+                <input class="inline" type="checkbox" id="parse_query" name="parse_query" value="True" {% if form.parse_query.value %}checked{% endif %}>
+                <label for="parse_query" class="right inline">Advanced Syntax</label>
+            </div>
+            <div class="small-2 columns">
                 <input type="submit" value="Search" class="button postfix">
             </div>
     </div>

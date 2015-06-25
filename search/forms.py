@@ -1,7 +1,10 @@
 from haystack.forms import (SearchForm, FacetedSearchForm)
+from haystack.inputs import Raw
+from django import forms
 
 
 class PliableSearchForm(SearchForm):
+    parse_query = forms.BooleanField(required=False)
 
     '''Adapted from FacetedSearchForm, but it performs a clean_query, not an auto_query'''
 
@@ -12,7 +15,10 @@ class PliableSearchForm(SearchForm):
         if not self.cleaned_data.get('q'):
             return self.no_query_found()
 
-        sqs = self.searchqueryset.raw_search(self.cleaned_data['q'])
+        if self.cleaned_data.get('parse_query', False):
+            sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+        else:
+            sqs = self.searchqueryset.raw_search(self.cleaned_data['q'])
 
         if self.load_all:
             sqs = sqs.load_all()
