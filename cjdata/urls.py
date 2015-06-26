@@ -4,10 +4,12 @@ from haystack.views import search_view_factory
 
 from search.query import sqs
 from search.views import (BetterFacetedSearchView, AutocompleteView, AnalyzerView)
-from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView, StateDatasetsView)
+from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView,
+                          StateDatasetsView, DataExportView)
 
 urlpatterns = patterns(
     '',
+    url(r'^data/export/$', DataExportView.as_view(), name='data-export'),
     url(r'^data/(?P<uuid>[a-f0-9-]{32,36})/$', DatasetDetailView.as_view(), name='dataset-detail'),
     url(r'^category/(?:(?P<category>[\w-]+)/)(?:(?P<subcategory>[\w-]+)/)?$',
         CategoryDatasetsView.as_view(), name='datasets-by-category'),
