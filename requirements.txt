@@ -14,3 +14,4 @@ gunicorn==19.3.0
 requests>=2.7.0
 whitenoise==1.0.6
 django-grappelli>=2.6.5
+xlrd==0.9.3
