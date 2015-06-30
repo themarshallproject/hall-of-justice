@@ -14,18 +14,20 @@ class Category(TimestampedModel):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=70, editable=False)
     parent = models.ForeignKey("self", related_name="children", null=True, blank=True)
-    path = models.CharField(max_length=200, editable=False)
 
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-        ordering = ['path', 'parent__name', 'name']
+        ordering = ['parent__name', 'name']
         unique_together = ("name", "parent")
 
     def save(self, *args, **kwargs):
-        self.path = self._calculate_pathname()
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
+
+    @property
+    def path(self):
+        return self._calculate_pathname()
 
     def _calculate_pathname(self):
         if self.parent:
@@ -40,8 +42,6 @@ class Category(TimestampedModel):
         return reverse('datasets-by-category', kwargs=kwargs)
 
     def __str__(self):
-        if not self.path:
-            return self._calculate_pathname()
         return self.path
 
 

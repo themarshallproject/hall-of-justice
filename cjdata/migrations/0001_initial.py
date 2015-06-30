@@ -20,11 +20,10 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(max_length=50)),
                 ('slug', models.SlugField(max_length=70, editable=False)),
-                ('path', models.CharField(editable=False, max_length=200)),
                 ('parent', models.ForeignKey(blank=True, null=True, to='cjdata.Category', related_name='children')),
             ],
             options={
-                'ordering': ['path', 'parent__name', 'name'],
+                'ordering': ['parent__name', 'name'],
                 'verbose_name': 'Category',
                 'verbose_name_plural': 'Categories',
             },

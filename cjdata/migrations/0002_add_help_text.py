@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('cjdata', '0001_initial'),
+        ('cjdata', 'create_categories_from_markdown'),
     ]
 
     operations = [
