@@ -5,6 +5,7 @@ from django.core.validators import URLValidator
 import argparse
 
 from csv import DictReader
+from itertools import zip_longest
 from cjdata.models import (Category, Dataset, STATE_NATL_LOOKUP)
 
 validate_url = URLValidator()
@@ -71,14 +72,13 @@ class Command(BaseCommand):
             values_set = (v for v in values_set if v in STATE_NATL_LOOKUP.keys())
             return list(values_set)
 
-        def make_category_paths(cat_entry, subcat_entry):
+        def make_categories(cat_entry, subcat_entry):
             category_entries = cat_entry.split(',') if cat_entry else []
+            cat_entries_cleaned = (c.strip() for c in category_entries)
             subcategory_entries = subcat_entry.split(',') if subcat_entry else []
-            for n, cat_name in enumerate(category_entries):
-                if cat_name:
-                    subcat_name = subcategory_entries[n] if n < len(subcategory_entries) else ''
-                    cat_components = (cat_name.strip().title(), subcat_name.strip().title())
-                    yield '/'.join(cat_components) if cat_components[-1] else cat_components[0]
+            subcat_entries_cleaned = (c.strip() for c in subcategory_entries)
+            cat_zip = zip_longest(cat_entries_cleaned, subcat_entries_cleaned, fillvalue=None)
+            return cat_zip
 
         fp = options.get('filepath', None)
         save_objects = not options.get('dryrun', False)
@@ -120,7 +120,7 @@ class Command(BaseCommand):
                 # Get category paths
                 category_raw = item.pop('category', None)
                 subcategory_raw = item.pop('subcategory', None)
-                category_paths = make_category_paths(category_raw, subcategory_raw)
+                category_tuples = make_categories(category_raw, subcategory_raw)
 
                 #  Get title, url, etc.
                 item_title = item.get('title', None)
@@ -141,16 +141,28 @@ class Command(BaseCommand):
                     self.stdout.write("\tURL: '{}'".format(item.get('url')))
                 # Handle categories and subcategories
                 categories = []
-                for cpath in category_paths:
-                    try:
-                        cat_obj = Category.objects.get(path=cpath)
-                        categories.append(cat_obj)
-                        if verbosity > 1:
-                            self.stdout.write("\tFound '{}' category".format(cpath))
-                    except Category.MultipleObjectsReturned:
-                        self.stderr.write("\tMultiple category matches for {}".format(cpath))
-                    except Category.DoesNotExist:
-                        self.stderr.write("\tNo '{}' category".format(cpath))
+                for cat_name, subcat_name in category_tuples:
+                    cat_repr = "{} -> {}".format(cat_name, subcat_name)
+                    if cat_name:
+                        try:
+                            top_cat = Category.objects.get(name__iexact=cat_name.strip(), parent__isnull=True)
+                        except Category.DoesNotExist:
+                            self.stderr.write("\tNo top-level category '{}' for {}".format(cat_name, cat_repr))
+                            continue
+                        if subcat_name:
+                            try:
+                                cat_obj = Category.objects.get(name__iexact=subcat_name.strip(), parent_id=top_cat.id)
+                                categories.append(cat_obj)
+                                if verbosity > 1:
+                                    self.stdout.write("\tFound '{}' category".format(cat_repr))
+                            except Category.MultipleObjectsReturned:
+                                self.stderr.write("\tMultiple category matches for {}".format(cat_repr))
+                            except Category.DoesNotExist:
+                                self.stderr.write("\tNo '{}' category".format(cat_repr))
+                        else:
+                            categories.append(top_cat)
+                    else:
+                        self.stderr.write("\t No top-level category name for {}!".format(cat_repr))
                 # If we don't have a title and a group_name,we probably shouldn't create an entry.
                 if item_title and item_group_name:
                     dataset = None
