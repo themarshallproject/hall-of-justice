@@ -41,7 +41,7 @@
     - Cybercrime
     - Domestic Violence
     - Drug
-    - Dui
+    - DUI
     - Elder Abuse
     - Gangs
     - Hate Crime
@@ -80,7 +80,7 @@
     - Performance Measures
     - Police Encounters
     - Training Academies
-    - Use Of Force
+    - Use of Force
 - Miscellaneous
     - Birth Cohort Studies
     - Data Accessibility
