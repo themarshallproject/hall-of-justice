@@ -2,19 +2,21 @@ from cjdata.models import STATE_NATL_LOOKUP
 
 STATES_SYNONYMS = ["{}=>{}".format(v.lower(), k.lower()) for k, v in STATE_NATL_LOOKUP.items()]
 
-cj_synonyms = [
+CASE_SENSITVE_SYNONYMS = [
+    'CFS,CAD=>call_for_service',
+    'STOP,STOP Violence=>domestic_violence'
+]
+
+CJ_SYNONYMS = [
     "homicide,murder,kill",
-    "close management=>close management,shu",
-    "solitary housing unit=>solitary housing unit,shu",
-    "solitary confinement=>solitary confinement,shu",
-    "shu,solitary=>shu",
-    "stop frisk,terry stop,pedestrian stop,stops,stop search,stop question frisk",
+    "close management,solitary housing unit,special housing unit,solitary confinement,shu,solitary=>solitary_confinement",
+    "stop frisk,terry stop,pedestrian stop,stop search,stop question frisk=>terry_stop",
     "death penalty,capital punishment",
     "deconfliction,information sharing",
     "arrests,bookings",
     "public legal services,indigent defense,public defenders",
-    "calls service,calls assistance,CAD,911 call,CFS,dispatch",
-    "domestic violence,intimate partner violence,domestic abuse,dating violence",
+    "calls service,calls assistance,911 call,dispatc,call_for_serviceh=>call_for_service",
+    "domestic violence,intimate partner violence,domestic abuse,dating violence,domestic_violence=>domestic_violence",
     "use force,officer-involved shooting,death custody,arrest-related death",
     "larceny,theft",
     "prison,jail",
@@ -22,18 +24,22 @@ cj_synonyms = [
     "restitution,victim compensation,compensation",
     "juvenile delinquent,juvenile,delinquent",
     "parole,probation",
-    "part 1 crime,index crime",
+    "part 1 crime,index crime=>index_crime",
     "k9,canine=>dog"
 ]
-cj_synonyms.extend(STATES_SYNONYMS)
+CJ_SYNONYMS.extend(STATES_SYNONYMS)
 
 DATASET_INDEX_SETTINGS = {
     "settings": {
         "analysis": {
             "filter": {
+                "case_sensitive_filter": {
+                    "type": "synonym",
+                    "synonyms": CASE_SENSITVE_SYNONYMS
+                },
                 "cjdata_synonym_filter": {
                     "type": "synonym",
-                    "synonyms": cj_synonyms
+                    "synonyms": CJ_SYNONYMS
                 },
                 "english_stop": {
                     "type": "stop",
@@ -57,6 +63,7 @@ DATASET_INDEX_SETTINGS = {
                 "cjdata_analyzer": {
                     "tokenizer": "classic",
                     "filter": [
+                        "case_sensitive_filter",
                         "lowercase",
                         "english_stop",
                         "cjdata_synonym_filter",
