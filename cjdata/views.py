@@ -3,8 +3,7 @@ from django.shortcuts import get_object_or_404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
 from search.query import sqs
 from django.http import StreamingHttpResponse
-import csv
-import itertools
+from cjdata.utils import generate_csv
 
 
 class IndexView(TemplateView):
@@ -58,32 +57,15 @@ class StateDatasetsView(ListView):
         return context
 
 
-class Echo(object):
-
-    """An object that implements just the write method of the file-like interface."""
-
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
-
-
 class DataExportView(View):
 
     def get(self, request, *args, **kwargs):
-        def generate_rows(queryset, fieldnames):
-            for object in qs:
-                yield list(getattr(object, f, None) for f in fieldnames)
 
         output_fieldnames = [f.name for f in Dataset._meta.get_fields() if f.name != 'id']
         qs = Dataset.objects.all()
 
-        pseudo_buffer = Echo()
-        writer = csv.writer(pseudo_buffer)
+        csv_data = generate_csv(qs, output_fieldnames)
 
-        rows = generate_rows(qs, output_fieldnames)
-        rows_with_header = itertools.chain((writer.writerow(header) for header in (output_fieldnames,)),
-                                           (writer.writerow(row) for row in rows))
-
-        response = StreamingHttpResponse(rows_with_header, content_type="text/csv")
+        response = StreamingHttpResponse(csv_data, content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="criminal-justice-{}-rows.csv"'.format(qs.count())
         return response
