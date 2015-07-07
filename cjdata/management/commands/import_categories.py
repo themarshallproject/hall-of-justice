@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from cjdata.models import Category
 import argparse
+from cjdata.utils import parse_markdown_list
 
 
 class Command(BaseCommand):
@@ -24,14 +25,12 @@ class Command(BaseCommand):
         save_objects = not options.get('dryrun', False)
         verbosity = options.get('verbosity', None)
 
-        top_level_li = '- '
-        sublevel_li = '    - '
-
         if fp:
             top_cat = None
-            for line in fp:
-                if line.startswith(top_level_li):
-                    cat_name = line.lstrip(top_level_li).strip()
+            list_items = parse_markdown_list(fp.read())
+            for indent, item in list_items:
+                cat_name = item.strip()
+                if indent < 2:
                     if verbosity > 1:
                         self.stdout.write("Found top-level category name '{}'".format(cat_name))
                     try:
@@ -46,10 +45,9 @@ class Command(BaseCommand):
                         if verbosity > 1:
                             self.stdout.write("Saving top-level category: '{}'".format(top_cat.name))
                         top_cat.save()
-                elif line.startswith(sublevel_li) and top_cat:
-                    cat_name = line.lstrip(sublevel_li).strip()
+                elif indent >= 2 and top_cat:
                     if verbosity > 1:
-                        self.stdout.write("Found subcategory name '{}'".format(cat_name))
+                        self.stdout.write("Found subcategory '{} -> {}'".format(top_cat.name, cat_name))
                     if save_objects:
                         try:
                             sub_cat = Category.objects.get(name__iexact=cat_name, parent=top_cat)

@@ -1,5 +1,8 @@
 import csv
 import itertools
+import re
+
+MARKDOWN_LIST_ITEM_REG = r'^(?P<indent>\s*)[\-+*]\s(?P<item>.*)$'
 
 
 class Echo(object):
@@ -23,3 +26,15 @@ def generate_csv(queryset, fieldnames):
         rows = generate_rows(queryset, fieldnames)
         return itertools.chain((writer.writerow(header) for header in (fieldnames,)),
                                (writer.writerow(row) for row in rows))
+
+
+def parse_markdown_list(input_string):
+    '''Simple markdown list parser that supports single-line list items only.'''
+    list_item = re.compile(MARKDOWN_LIST_ITEM_REG)
+    for line in input_string.splitlines():
+        match = list_item.match(line)
+        if match:
+            match_dict = match.groupdict()
+            indent = len(match_dict['indent'])
+            item = match_dict['item'].strip()
+            yield indent, item
