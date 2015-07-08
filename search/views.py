@@ -1,8 +1,15 @@
 from haystack.views import FacetedSearchView
+from haystack.generic_views import SearchMixin
 from haystack.query import SearchQuerySet
 from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.http import JsonResponse
+from search.forms import PliableFacetedSearchForm
+from cjdata.models import Dataset
+from common.utils import generate_csv
+from django.http import StreamingHttpResponse
+
+
 import collections
 
 basestring = (str, bytes)
@@ -67,3 +74,30 @@ class AnalyzerView(TemplateView):
         context['tokens'] = tokens
 
         return context
+
+
+class SearchExportView(View, SearchMixin):
+    """docstring for SeachExportView"""
+    form_class = PliableFacetedSearchForm
+    http_method_names = ['get']
+    success_url = '/'
+
+    def get(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        sqs = form.search()
+        result_objects = (result.object for result in sqs)
+
+        output_fieldnames = [f.name for f in Dataset._meta.get_fields() if f.name != 'id']
+        csv_data = generate_csv(result_objects, output_fieldnames)
+
+        response = StreamingHttpResponse(csv_data, content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename="criminal-justice-{}-rows.csv"'.format(sqs.count())
+        return response
+
+    # def form_valid(self, form):
+    #     return super(SearchExportView, self).form_valid()
+
+    # def form_invalid(self, form):
+    #     # do something -- log the error, etc -- if needed
+    #     return super(SearchExportView, self).form_invalid()

@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
 from search.query import sqs
 from django.http import StreamingHttpResponse
-from cjdata.utils import generate_csv
+from common.utils import generate_csv
 
 
 class IndexView(TemplateView):
@@ -63,6 +63,7 @@ class DataExportView(View):
 
         output_fieldnames = [f.name for f in Dataset._meta.get_fields() if f.name != 'id']
         qs = Dataset.objects.all()
+        qs.prefetch_related('categories')
 
         csv_data = generate_csv(qs, output_fieldnames)
 

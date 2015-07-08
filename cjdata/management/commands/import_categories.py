@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from cjdata.models import Category
 import argparse
-from cjdata.utils import parse_markdown_list
+from common.utils import parse_markdown_list
 
 
 class Command(BaseCommand):

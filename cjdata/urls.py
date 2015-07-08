@@ -3,7 +3,7 @@ from haystack.views import search_view_factory
 
 from search.query import sqs
 from search.forms import PliableFacetedSearchForm
-from search.views import (BetterFacetedSearchView, AutocompleteView, AnalyzerView)
+from search.views import (BetterFacetedSearchView, AutocompleteView, AnalyzerView, SearchExportView)
 from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView,
                           StateDatasetsView, DataExportView)
 
@@ -17,6 +17,7 @@ urlpatterns = patterns(
     url(r'^search/$', search_view_factory(view_class=BetterFacetedSearchView,
                                           form_class=PliableFacetedSearchForm,
                                           searchqueryset=sqs), name='haystack_search'),
+    url(r'search/export/$', SearchExportView.as_view(), name='search_export'),
     url(r'^search/analyze/', AnalyzerView.as_view(), name='search_analyze'),
     url(r'^autocomplete/$', AutocompleteView.as_view(), name='haystack_autocomplete'),
     url(r'^$', IndexView.as_view(), name='index')

@@ -25,7 +25,7 @@ def generate_rows(queryset, fieldnames):
                 field = concrete_model._meta.get_field(name)
                 if field.rel and field.rel.many_to_many:
                     manager = getattr(object, field.name)
-                    yield ", ".join(smart_text(related) for related in manager.values())
+                    yield ", ".join(smart_text(related) for related in manager.all())
                 else:
                     yield field.value_to_string(object)
             except FieldDoesNotExist:
