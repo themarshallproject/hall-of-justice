@@ -80,7 +80,6 @@ class SearchExportView(View, SearchMixin):
     """docstring for SeachExportView"""
     form_class = PliableFacetedSearchForm
     http_method_names = ['get']
-    success_url = '/'
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
@@ -94,10 +93,3 @@ class SearchExportView(View, SearchMixin):
         response = StreamingHttpResponse(csv_data, content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="criminal-justice-{}-rows.csv"'.format(sqs.count())
         return response
-
-    # def form_valid(self, form):
-    #     return super(SearchExportView, self).form_valid()
-
-    # def form_invalid(self, form):
-    #     # do something -- log the error, etc -- if needed
-    #     return super(SearchExportView, self).form_invalid()
