@@ -5,11 +5,13 @@ from search.query import sqs
 from search.forms import PliableFacetedSearchForm
 from search.views import (BetterFacetedSearchView, AutocompleteView, AnalyzerView, SearchExportView)
 from cjdata.views import (IndexView, DatasetDetailView, CategoryDatasetsView,
-                          StateDatasetsView, DataExportView)
+                          StateDatasetsView, DatasetsExportView, CategoryDatasetsExportView)
 
 urlpatterns = patterns(
     '',
-    url(r'^data/export/$', DataExportView.as_view(), name='data-export'),
+    url(r'^export/all/$', DatasetsExportView.as_view(), name='datasets-export'),
+    url(r'^export/category/(?:(?P<category>[\w-]+)/)(?:(?P<subcategory>[\w-]+)/)?$',
+        CategoryDatasetsExportView.as_view(), name='datasets-by-category-export'),
     url(r'^data/(?P<uuid>[a-f0-9-]{32,36})/$', DatasetDetailView.as_view(), name='dataset-detail'),
     url(r'^category/(?:(?P<category>[\w-]+)/)(?:(?P<subcategory>[\w-]+)/)?$',
         CategoryDatasetsView.as_view(), name='datasets-by-category'),

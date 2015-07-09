@@ -10,6 +10,9 @@
             'No categories'
             {% endif %}
         {% endspaceless %}</h1>
+        {% if object_list %}
+            <a href="{% url 'datasets-by-category-export' category.path.lower %}" class="button small secondary">Export Data</a>
+        {% endif %}
 {% endblock pageheader %}
 
 

@@ -2,8 +2,7 @@ from django.views.generic import View, DetailView, ListView, TemplateView
 from django.shortcuts import get_object_or_404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
 from search.query import sqs
-from django.http import StreamingHttpResponse
-from common.utils import generate_csv
+from common.views import CSVExportMixin
 
 
 class IndexView(TemplateView):
@@ -57,16 +56,14 @@ class StateDatasetsView(ListView):
         return context
 
 
-class DataExportView(View):
+class DatasetsExportView(CSVExportMixin, View):
+    model = Dataset
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
+        queryset = super(DatasetsExportView, self).get_queryset()
+        queryset = queryset.prefetch_related('categories')
+        return queryset
 
-        output_fieldnames = [f.name for f in Dataset._meta.get_fields() if f.name != 'id']
-        qs = Dataset.objects.all()
-        qs.prefetch_related('categories')
 
-        csv_data = generate_csv(qs, output_fieldnames)
-
-        response = StreamingHttpResponse(csv_data, content_type="text/csv")
-        response['Content-Disposition'] = 'attachment; filename="criminal-justice-{}-rows.csv"'.format(qs.count())
-        return response
+class CategoryDatasetsExportView(CSVExportMixin, CategoryDatasetsView):
+    paginate_by = None
