@@ -7,6 +7,7 @@ import argparse
 from csv import DictReader
 from itertools import zip_longest
 from cjdata.models import (Category, Dataset, STATE_NATL_LOOKUP)
+import re
 
 validate_url = URLValidator()
 
@@ -80,6 +81,14 @@ class Command(BaseCommand):
             cat_zip = zip_longest(cat_entries_cleaned, subcat_entries_cleaned, fillvalue=None)
             return cat_zip
 
+        def titlecase(s):
+            return re.sub(r"[A-Za-z]+('[A-Za-z]+)?",
+                          lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower(),
+                          s)
+
+        def clean_sectors(sectors_list):
+            return list(titlecase(s.strip()) for s in sectors_list)
+
         fp = options.get('filepath', None)
         save_objects = not options.get('dryrun', False)
         verbosity = options.get('verbosity', None)
@@ -110,9 +119,10 @@ class Command(BaseCommand):
                 # Coerce select values to booleans
                 boolean_fields = ("mappable", "updated", "population_data", "internet_available")
                 data_iterable = booleanize(data_iterable, boolean_fields)
-                # Back to a dict, clean states and url
+                # Back to a dict, clean states, sectors and url
                 item = dict(data_iterable)
                 item['states'] = clean_states(item.get('states', []))
+                item['sectors'] = clean_sectors(item.get('sectors', []))
                 raw_url = item.pop('url', None)
                 if raw_url:
                     item['url'] = clean_url(raw_url)
