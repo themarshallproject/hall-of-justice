@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
         minLength: 3,
         source: function(request, response) {
             var lastTerm = extractLast(request.term);
-            console.log("request.term: " + lastTerm);
+            // console.log("request.term: " + lastTerm);
             $.getJSON(searchURL, {
                 q: extractLast(request.term)
             })
