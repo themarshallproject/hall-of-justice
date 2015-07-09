@@ -9,6 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
+            ('cjdata', 'create_intarray_extension'),
     ]
 
     operations = [
