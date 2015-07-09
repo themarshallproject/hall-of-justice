@@ -77,7 +77,7 @@ class AnalyzerView(TemplateView):
 
 
 class SearchExportView(View, SearchMixin):
-    """docstring for SeachExportView"""
+    """Provides a view that peforms a Dataset search and outputs a CSV"""
     form_class = PliableFacetedSearchForm
     http_method_names = ['get']
 
@@ -85,11 +85,28 @@ class SearchExportView(View, SearchMixin):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         sqs = form.search()
-        result_objects = (result.object for result in sqs)
+
+        # Filter a queryset by pk
+        result_ids = list(r.pk for r in sqs)
+        queryset = Dataset.objects.filter(id__in=result_ids)
+
+        # Use the idx feature of postgres' intarray extension to order the same as the search order
+        sql_id_array = "'{{{}}}'::int[]".format(",".join(result_ids))
+        sql_order_expression = '(idx({}, id))'.format(sql_id_array)
+        queryset = queryset.extra(select={'ordering': sql_order_expression})
+        queryset = queryset.extra(order_by=['ordering'])
 
         output_fieldnames = [f.name for f in Dataset._meta.get_fields() if f.name != 'id']
-        csv_data = generate_csv(result_objects, output_fieldnames)
+        csv_data = generate_csv(queryset, output_fieldnames)
 
         response = StreamingHttpResponse(csv_data, content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="criminal-justice-{}-rows.csv"'.format(sqs.count())
         return response
+
+    def get_form_kwargs(self):
+        # Taken directly from FacetedSearchMixin in haystack (which does not work for some reason)
+        kwargs = super(SearchExportView, self).get_form_kwargs()
+        kwargs.update({
+            'selected_facets': self.request.GET.getlist("selected_facets")
+        })
+        return kwargs

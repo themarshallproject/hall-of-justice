@@ -31,12 +31,7 @@
     <div class="row">
         {% if query %}
         <div class="columns large-2">
-            <a href="{% spaceless %}
-            {% if form.q.value %}
-            {% else %}
-            #
-            {% endif %}{% url 'search_export' %}?q={{ form.q.value|default:"" }}{% if form.parse_query.value %}&amp;parse_query=True{% endif %}
-            {% endspaceless %}" class="button small secondary {% if not form.q.value %}disabled{% endif %}">Export Data</a>
+            <a href="{% if form.q.value %}{% else %}#{% endif %}{% url 'search_export' %}?q={{ form.q.value|default:"" }}{% for facet in form.selected_facets %}&amp;selected_facets={{ facet }}{% endfor %}{% if form.parse_query.value %}&amp;parse_query=True{% endif %}" class="button small secondary {% if not form.q.value %}disabled{% endif %}">Export Data</a>
 
             <h4>Filter by</h4>
             <ul class="stack button-group">

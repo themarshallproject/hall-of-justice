@@ -1,5 +1,4 @@
-from haystack.forms import (SearchForm, FacetedSearchForm)
-from haystack.inputs import Raw
+from haystack.forms import SearchForm
 from django import forms
 
 
@@ -26,12 +25,16 @@ class PliableSearchForm(SearchForm):
         return sqs
 
 
-class PliableFacetedSearchForm(FacetedSearchForm, PliableSearchForm):
+class PliableFacetedSearchForm(PliableSearchForm):
 
     '''Adapted from FacetedSearchForm, but it performs a clean_query, not an auto_query'''
 
+    def __init__(self, *args, **kwargs):
+        self.selected_facets = kwargs.pop("selected_facets", [])
+        super(PliableFacetedSearchForm, self).__init__(*args, **kwargs)
+
     def search(self):
-        sqs = super(FacetedSearchForm, self).search()
+        sqs = super(PliableFacetedSearchForm, self).search()
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
@@ -45,4 +48,3 @@ class PliableFacetedSearchForm(FacetedSearchForm, PliableSearchForm):
                 sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
 
         return sqs
-
