@@ -12,7 +12,9 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
+    import debug_toolbar
     urlpatterns += patterns(
         'django.contrib.staticfiles.views',
         url(r'^static/(?P<path>.*)$', 'serve'),
+        url(r'^__debug__/', include(debug_toolbar.urls)),
     )

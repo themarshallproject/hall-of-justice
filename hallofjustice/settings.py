@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import dj_database_url
 from django.utils.module_loading import import_string
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+from django.conf.global_settings import MIDDLEWARE_CLASSES as MC
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -54,14 +55,13 @@ INSTALLED_APPS = (
     'crawler'
 )
 
-
-MIDDLEWARE_CLASSES = (
+AUTHENTICATION_MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+)
+
+MIDDLEWARE_CLASSES = MC + AUTHENTICATION_MIDDLEWARE + (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
@@ -146,7 +146,12 @@ ELASTICSEARCH_MINIMUM_SHOULD_MATCH = '80%'
 if DEBUG:
     try:
         import debug_toolbar
+        DEBUG_TOOLBAR_PATCH_SETTINGS = False
+        DEBUG_TOOLBAR_CONFIG = {
+            'SHOW_TOOLBAR_CALLBACK': 'extras.middleware.likely_show_toolbar'
+        }
         INSTALLED_APPS += ('debug_toolbar',)
+        MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     except ImportError:
         pass
     try:
