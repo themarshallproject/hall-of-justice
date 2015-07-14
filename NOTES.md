@@ -1,6 +1,6 @@
 # Notes
 
-Collecting notes on how to do some things with the project using ansible.
+Collecting notes on how to do some things with the project using ansible. Our development environment is set up as follows: Vagrant uses Ansible to configure virtual machines that are created using Virtualbox. These 3 tools (Vagrant, Ansible, Virtualbox) work together to create a development environment that closely mirrors the way things will be set up in production. The Ansible scripts should be usable to configure the servers needed to run the application in production.
 
 
 ## Rebuild the search index
@@ -29,4 +29,12 @@ vagrant@hallofjustice:~$ sudo su - hallofjustice
 (virt)hallofjustice@hallofjustice:~/src/hallofjustice$ ./manage.py runserver 0.0.0.0:9000
 ```
 
-Now you can debug errors and view changes without having to mess with the instance controlled by nginx and uwsgi.
+You should be able to view that instance of the site at http://10.73.98.100:9000. Now you can debug errors and view changes without having to mess with the default instance controlled by nginx and uwsgi.
+
+## Restarting the default instance of the site
+
+The default instance of the site at http://10.73.98.100/ is being served via [uwsgi](http://uwsgi-docs.readthedocs.org/en/latest/) and [nginx](http://nginx.org/en/), which is how the production version will run. You can use ansible to restart the default instance using the following:
+
+```bash
+hostcomputer:~$ ansible-playbook -i provisioning/hosts.vagrant provisioning/utils.yml -t website-restart -u vagrant --private-key=.vagrant/machines/site/virtualbox/private_key
+```
