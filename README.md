@@ -16,6 +16,8 @@ Once you've imported data into the database, you should create (or recreate) the
 
 There is a Vagrantfile for setting up multiple Virtualbox virtual machines and provisioning them using [Ansible](http://docs.ansible.com). You should be able to run `vagrant up` to create the machines. You'll need to run the setup steps above to populate the data.
 
+Further information is available in NOTES.md.
+
 ## Feature Notes
 
 ### Search
