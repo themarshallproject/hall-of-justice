@@ -3,6 +3,8 @@
   hosts: hallofjustice-site
   user: ubuntu
   sudo: yes
+  vars:
+    configure_user: yes
   roles:
     - role: common-roles/common
       hostname: hallofjustice.org
