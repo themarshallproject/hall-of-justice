@@ -61,7 +61,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "site" do |site|
     site.vm.network "private_network", ip: "10.73.98.100"
-    site.vm.synced_folder "./", "/projects/hallofjustice/src/hallofjustice"
+    site.vm.synced_folder "./", "/projects/hallofjustice/src/hallofjustice",
+    owner: "hallofjustice", group: "hallofjustice"
     site.vm.provider "virtualbox" do |vb|
       vb.name = "site.hallofjustice"
     end
