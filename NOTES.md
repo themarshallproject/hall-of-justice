@@ -2,6 +2,23 @@
 
 Collecting notes on how to do some things with the project using ansible. Our development environment is set up as follows: Vagrant uses Ansible to configure virtual machines that are created using Virtualbox. These 3 tools (Vagrant, Ansible, Virtualbox) work together to create a development environment that closely mirrors the way things will be set up in production. The Ansible scripts should be usable to configure the servers needed to run the application in production.
 
+## Getting a Vagrant environment
+
+Getting your vagrant environment running should be fairly straightforward, as long as you have *Ansible*, *Virtualbox*, and *Vagrant* installed on your computer. The first step is to fetch the git submodules for this repo. So run:
+
+```shell
+hostcomputer:~$ git submodule init
+hostcomputer:~$ git submodule updated
+```
+
+This should fetch the exact revision of *ansible-common-roles* this project depends on. The next step is to run:
+
+```shell
+hostcomputer:~$ vagrant up
+```
+
+This should take a few minutes as it creates and configures 4 virtual machines. **Sometimes, this will fail with errors.** I think this is some ansible/vagrant flakiness. If you end up with a machine that isn't fully configured, you can destroy a machine and rebuild it. So you could `vagrant destroy db` then `vagrant up db` to recreate the database virtual machine.
+
 
 ## Rebuild the search index
 
