@@ -26,7 +26,6 @@
     - Criminal Courts
     - Death Penalty
     - Equal Justice
-    - False Convictions
     - Fees
     - Judges
     - Juries
@@ -38,7 +37,6 @@
     - Wrongful Convictions
 - Crime
     - Child Abuse
-    - Cybercrime
     - Domestic Violence
     - Drug
     - DUI
@@ -46,8 +44,6 @@
     - Gangs
     - Hate Crime
     - Human Trafficking
-    - Identity Theft
-    - Immigration
     - Other
     - Property Crime
     - Sex Crimes
@@ -57,6 +53,7 @@
     - Corrections
     - Courts
     - Law Enforcement
+    - Juvenile Justice
 - Juvenile Justice
     - Corrections
     - Courts
@@ -66,7 +63,6 @@
     - Recidivism
     - Status Offenses
 - Law Enforcement
-    - Accreditation
     - Administration
     - Agency Census Information
     - Arrests
@@ -82,7 +78,6 @@
     - Training Academies
     - Use of Force
 - Miscellaneous
-    - Birth Cohort Studies
     - Data Accessibility
     - Guns
     - Indian Country Justice System
