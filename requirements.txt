@@ -6,7 +6,7 @@ dj-database-url==0.3.0
 elasticsearch==1.4.0
 elasticstack==0.1.1
 eventlet>=0.17.4
-django-haystack>=2.3.1
+django-haystack>=2.4.0
 django-localflavor==1.1
 https://bitbucket.org/schinckel/django-postgres/get/ada11ed1caef.zip
 psycopg2==2.6
