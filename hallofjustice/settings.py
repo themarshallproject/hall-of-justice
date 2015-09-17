@@ -145,12 +145,12 @@ ELASTICSEARCH_MINIMUM_SHOULD_MATCH = '80%'
 
 if DEBUG:
     try:
+        INSTALLED_APPS += ('debug_toolbar',)
         import debug_toolbar
         DEBUG_TOOLBAR_PATCH_SETTINGS = False
         DEBUG_TOOLBAR_CONFIG = {
             'SHOW_TOOLBAR_CALLBACK': 'extras.middleware.likely_show_toolbar'
         }
-        INSTALLED_APPS += ('debug_toolbar',)
         MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     except ImportError:
         pass
