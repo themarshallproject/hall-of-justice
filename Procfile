@@ -1,1 +1,1 @@
-web: gunicorn hallofjustice.wsgi --log-file errors.log
+web: gunicorn hallofjustice.wsgi --log-file -
