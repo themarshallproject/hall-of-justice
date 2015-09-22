@@ -27,13 +27,20 @@ class Category(TimestampedModel):
 
     @property
     def path(self):
-        return self._calculate_pathname()
+        return self._calculate_pathname(False)
 
-    def _calculate_pathname(self):
+    @property
+    def slugged_path(self):
+        return self._calculate_pathname(True)
+
+    def _calculate_pathname(self, slugged):
+        name = self.slug if slugged else self.name
+
         if self.parent:
-            return "{parent_name}/{name}".format(name=self.name, parent_name=str(self.parent.path))
+            parent_name = str(self.parent.slug) if slugged else str(self.parent.name)
+            return "{parent_name}/{name}".format(name=name, parent_name=parent_name)
         else:
-            return "{o.name}".format(o=self)
+            return "{name}".format(name=name)
 
     def get_absolute_url(self):
         kwargs = {'category': self.parent.slug if self.parent else self.slug}
@@ -42,7 +49,7 @@ class Category(TimestampedModel):
         return reverse('datasets-by-category', kwargs=kwargs)
 
     def __str__(self):
-        return self.path
+        return self.name
 
 
 class Dataset(TimestampedModel):

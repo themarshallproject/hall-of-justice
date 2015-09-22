@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from cjdata.models import Dataset, Category, STATE_NATL_LOOKUP
 from search.query import sqs
 from common.views import CSVExportMixin
+from django.db.models import Q
 
 
 class IndexView(TemplateView):
@@ -30,10 +31,13 @@ class CategoryDatasetsView(ListView):
         if cat_slug != 'none':
             self.category = get_object_or_404(Category, slug=cat_slug, parent__isnull=True)
             if subcat_slug:
-                self.category = get_object_or_404(Category, slug=subcat_slug, parent=self.category)
-            return self.category.dataset_set.all()
+                return get_object_or_404(Category, slug=subcat_slug, parent=self.category).dataset_set.all()
+            else:
+                query = (Q(categories=self.category) | Q(categories__parent=self.category))
         else:
-            return Dataset.objects.filter(categories__isnull=True)
+            query = Q(categories__isnull=True)
+
+        return Dataset.objects.filter(query)
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDatasetsView, self).get_context_data(**kwargs)
@@ -54,6 +58,9 @@ class StateDatasetsView(ListView):
         context['location_abbr'] = self.state_abbr
         context['location'] = STATE_NATL_LOOKUP.get(self.state_abbr, None)
         return context
+
+class StatesExportView(CSVExportMixin, StateDatasetsView):
+    paginate_by = None
 
 
 class DatasetsExportView(CSVExportMixin, View):
