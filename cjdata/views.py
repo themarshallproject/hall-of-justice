@@ -31,7 +31,8 @@ class CategoryDatasetsView(ListView):
         if cat_slug != 'none':
             self.category = get_object_or_404(Category, slug=cat_slug, parent__isnull=True)
             if subcat_slug:
-                return get_object_or_404(Category, slug=subcat_slug, parent=self.category).dataset_set.all()
+                self.category = get_object_or_404(Category, slug=subcat_slug, parent=self.category)
+                return self.category.dataset_set.all()
             else:
                 query = (Q(categories=self.category) | Q(categories__parent=self.category))
         else:

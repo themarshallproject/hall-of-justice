@@ -49,7 +49,7 @@ class Category(TimestampedModel):
         return reverse('datasets-by-category', kwargs=kwargs)
 
     def __str__(self):
-        return self.name
+        return self.path
 
 
 class Dataset(TimestampedModel):
