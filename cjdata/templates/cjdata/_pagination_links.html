@@ -1,25 +1,31 @@
+{% load cjdata_filters %}
+
 {% if paginator %}
     <ul class="pagination">
         <li>
             {{ paginator.count }} items | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </li>
         <li class="arrow {% if not page_obj.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
-            {{ request.get_full_path }}
-            {% if page_obj.has_previous %}&page=1{% endif %}
+            {% if page_obj.has_previous %}
+                {% pagination_url_doctor 1 %}
+            {% endif %}
         {% endspaceless %}
         ">&laquo; First</a></li>
         <li class="arrow {% if not page_obj.has_previous %}unavailable{% endif %}"><a href="{% spaceless %}
-            {{ request.get_full_path }}
-            {% if page_obj.has_previous %}&page={{ page_obj.previous_page_number }}{% endif %}
+            {% if page_obj.has_previous %}
+                {% pagination_url_doctor page_obj.previous_page_number %}
+            {% endif %}
         {% endspaceless %}
         ">&lsaquo; Previous</a></li>
         <li class="arrow {% if not page_obj.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
-            {{ request.get_full_path }}
-            {% if page_obj.has_next %}&page={{ page_obj.next_page_number }}{% endif %}
+            {% if page_obj.has_next %}
+                {% pagination_url_doctor page_obj.next_page_number %}
+            {% endif %}
         {% endspaceless %}">Next &rsaquo;</a></li>
         <li class="arrow {% if not page_obj.has_next %}unavailable{% endif %}"><a href="{% spaceless %}
-            {{ request.get_full_path }}
-            {% if page_obj.has_next %}&page={{ page_obj.paginator.num_pages }}{% endif %}
+            {% if page_obj.has_next %}
+                {% pagination_url_doctor page_obj.paginator.num_pages %}
+            {% endif %}
         {% endspaceless %}">Last &raquo;</a></li>
     </ul>
 {% endif %}

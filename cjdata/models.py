@@ -96,7 +96,7 @@ class Dataset(TimestampedModel):
         get_latest_by = 'created_at'
         verbose_name = "Dataset"
         verbose_name_plural = "Datasets"
-        ordering = ['-updated_at', 'url']
+        ordering = ['states', '-updated_at', 'url']
 
     def states_expanded(self):
         return (STATE_NATL_LOOKUP[s] for s in self.states)
