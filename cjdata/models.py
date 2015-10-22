@@ -9,7 +9,6 @@ import uuid
 STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
 STATE_NATL_LOOKUP = dict(STATE_NATL_CHOICES)
 
-
 class Category(TimestampedModel):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=70, editable=False)
@@ -86,7 +85,7 @@ class Dataset(TimestampedModel):
                                   help_text="Human-readable description of the time period covered in the data.")
     # Availability
     internet_available = models.NullBooleanField(help_text="Is this dataset available online?")
-    access_type = models.CharField(blank=True, max_length=50,
+    access_type = models.CharField(db_index=True, blank=True, max_length=50,
                                    help_text="Description of how data can be accessed, and if it is machine readable.")
     # Associated Information
     associated_legislation = models.TextField(blank=True)

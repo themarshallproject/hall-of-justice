@@ -8,6 +8,7 @@ class DatasetIndex(indexes.ModelSearchIndex, indexes.Indexable):
     title = indexes.CharField(model_attr='title', boost=1.25)
     description = indexes.CharField(model_attr='description', boost=1.125)
     group_name = indexes.CharField(model_attr='group_name', faceted=True)
+    access_type = indexes.CharField(model_attr='access_type', faceted=True)
     states = indexes.FacetMultiValueField(model_attr='states')
     division_names = indexes.FacetMultiValueField(model_attr='division_names')
     sectors = indexes.FacetMultiValueField(model_attr='sectors')
@@ -53,7 +54,7 @@ class TagIndex(indexes.ModelSearchIndex, indexes.Indexable):
 
     class Meta:
         model = Dataset
-        fields = ['title', 'group_name']
+        fields = ['title', 'group_name', 'access_type']
 
     def prepare_text(self, object):
         return object.tags

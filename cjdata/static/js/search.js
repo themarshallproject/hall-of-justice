@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
                 q: extractLast(request.term)
             })
             .done(function(json) {
-                var results = []
+                var results = [];
                 if (json.results) {
                     results = $.map(json.results, function(val, i) {
                         return val.value;

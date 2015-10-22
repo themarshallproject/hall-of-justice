@@ -24,6 +24,7 @@
             {% for item in selected_facets.values %}
                 <li><strong>{{ item }}</strong></li>
             {% endfor %}
+                <li><a href="?q={{ query }}">Clear Filters</a></li>
             </ul>
         </div>
     </div>
@@ -70,6 +71,18 @@
                     </ul>
                 {% else %}
                     <button class="disabled secondary">No groups</button>
+                {% endif %}
+                </li>
+                <li>
+                {% if facets.fields.access_type %}
+                    <a href="#" data-dropdown="access_type" aria-controls="access_type" aria-expanded="false" class="button secondary dropdown expand">Access Types</a>
+                    <ul id="access_type" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                  {% for name in facets.fields.access_type %}
+                        <li><a href="{{ request.get_full_path }}&amp;selected_facets=access_type:{{ name.0|urlencode }}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="disabled secondary">No types</button>
                 {% endif %}
                 </li>
             </ul>
