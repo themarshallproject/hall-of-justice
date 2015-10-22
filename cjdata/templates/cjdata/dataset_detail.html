@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load cjdata_filters %}
+
 {% block pageheader %}
     <h1>{{ object.title }}</h1>
 {% endblock pageheader %}
@@ -49,6 +51,8 @@
                 <dd>{{ object.updated|yesno|title }}</dd>
                 <dt>Frequency</dt>
                 <dd>{{ object.frequency }}</dd>
+                <dt>Year(s) of Publication</dt>
+                <dd>{{ object.data_range|format_data_range }}</dd>
             </dl>
         </div>
     </div>
