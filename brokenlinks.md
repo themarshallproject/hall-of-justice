@@ -61,7 +61,7 @@ Example:
 python manage.py report_bad_links 3 --output_file ../../brokenlinks.csv
 ```
 
-#If you get a permission denied error you will probably need to go up a level to save the file (ex: ../../file.csv)
+ If you get a permission denied error you will probably need to go up a level to save the file (ex: ../../file.csv)
 
 ```Bash
 exit
