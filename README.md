@@ -33,8 +33,7 @@ Since celerybeat is set up for this project, you could edit `hallofjustice/celer
 ### Crawler Errors
 
 This document will instruct on how to check for broken links, links that the crawlers use to capture data.
-https://github.com/sunlightlabs/hall-of-justice/brokenlinks.md
-
+https://github.com/sunlightlabs/hall-of-justice/blob/master/brokenlinks.md
 
 ### Admin
 
