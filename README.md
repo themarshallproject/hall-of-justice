@@ -30,6 +30,11 @@ There is a *crawler* app that provides [Celery](http://docs.celeryproject.org/en
 
 Since celerybeat is set up for this project, you could edit `hallofjustice/celeryconfig.py` to schedule a regular run that task periodically to monitor for missing or otherwise bad URLs.
 
+### Crawler Errors
+
+This document will instruct on how to check for broken links, links that the crawlers use to capture data.
+https://github.com/sunlightlabs/hall-of-justice/blob/master/brokenlinks.md
+
 ### Admin
 
 The admin has been customized with `cjdata/admin.py` and the grappelli package. There are probably a lot of things that can be done to improve the admin as curation of the data moves into the Django admin.
