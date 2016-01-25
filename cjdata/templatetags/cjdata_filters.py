@@ -28,9 +28,9 @@ def pagination_url_doctor(context, page):
     if re.search(url_page_re, full_path):
         return re.sub(url_page_re, page, full_path)
     else:
-        if not context.request.GET.get('page', False):
-            return full_path + '?' + page
-        else:
+        if context.request.GET:
             return full_path + '&' + page
+        else:
+            return full_path + '?' + page
 
 
