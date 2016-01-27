@@ -30,3 +30,9 @@ staticfiles/*
 
 # vagrant
 .vagrant
+
+# stupid opened files generated
+.txt~
+.html~
+
+.DS_Store
