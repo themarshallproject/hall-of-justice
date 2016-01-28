@@ -1,4 +1,7 @@
-{% extends 'base.html' %}{% load static from staticfiles %}
+{% extends 'base.html' %}
+
+{% load static from staticfiles %}
+{% load cjdata_filters %}
 
 {% block pageheader %}
         <h1>Datasets for {% spaceless %}
@@ -21,7 +24,86 @@
 
 
 {% block content %}
+    {% if selected_facets %}
+    <div class="row">
+        <div class="columns large-12">
+            <ul class="inline-list">
+                <li>Selected filters:</li>
+            {% for item in selected_facets.values %}
+                <li><strong>{{ item }}</strong></li>
+            {% endfor %}
+                <li><a href="?">Clear Filters</a></li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="columns large-2">
+             <h4>Filter by</h4>
+            <ul class="stack button-group">
+                <li>
+                {% if states %}
+                    <a href="#" data-dropdown="states" aria-controls="states" aria-expanded="false" class="button secondary dropdown expand">States</a>
+                    <ul id="states" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                    {% for state in states %}
+                        {% with param=state.0|urlencode %}
+                            <li><a href="{% doctor_filter_link "selected_facets=states:"|add:param %}">{{ state.0 }} <strong>({{ state.1 }})</strong></a></li>
+                        {% endwith %}
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="disabled secondary">No States</button>
+                {% endif %}
+                </li>
+                <li>
+                {% if group_name %}
+                    <a href="#" data-dropdown="groups" aria-controls="groups" aria-expanded="false" class="button secondary dropdown expand">Groups</a>
+                    {# Provide only the top 10 groups #}
+                    <ul id="groups" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                    {% for name in group_name|slice:":10" %}
+                        {% with param=name.0|urlencode %}
+                            <li><a href="{% doctor_filter_link "selected_facets=group_name_exact:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                        {% endwith %}
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="disabled secondary">No groups</button>
+                {% endif %}
+                </li>
+                <li>
+                {% if sectors %}
+                    <a href="#" data-dropdown="sectors" aria-controls="sectors" aria-expanded="false" class="button secondary dropdown expand">Sectors</a>
+                    <ul id="sectors" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                    {% for name in sectors %}
+                        {% with param=name.0|urlencode %}
+                            <li><a href="{% doctor_filter_link "selected_facets=sectors:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                        {% endwith %}
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="disabled secondary">No groups</button>
+                {% endif %}
+                </li>
+                <li>
+                {% if access_type %}
+                    <a href="#" data-dropdown="access_type" aria-controls="access_type" aria-expanded="false" class="button secondary dropdown expand">Access Types</a>
+                    <ul id="access_type" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
+                  {% for name in access_type %}
+                      {% with param=name.0|urlencode %}
+                          <li><a href="{% doctor_filter_link "selected_facets=access_type:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                      {% endwith %}
+                  {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="disabled secondary">No types</button>
+                {% endif %}
+                </li>
+            </ul>
+    </div>
+    <div class="columns large-10">
     {% include "cjdata/_pagination_links.html" %}
     {% include "cjdata/_datasets_table.html" with object_list=page_obj.object_list %}
     {% include "cjdata/_pagination_links.html" %}
+    </div>
+    </div>
 {% endblock content %}
