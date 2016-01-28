@@ -47,7 +47,7 @@
                     <ul id="states" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for state in states %}
                         {% with param=state.0|urlencode %}
-                            <li><a href="{% doctor_filter_link "selected_facets=states:"|add:param %}">{{ state.0 }} <strong>({{ state.1 }})</strong></a></li>
+                            <li><a href="{% doctor_filter_link "selected_facets" "states:"|add:param %}">{{ state.0 }} <strong>({{ state.1 }})</strong></a></li>
                         {% endwith %}
                     {% endfor %}
                     </ul>
@@ -62,7 +62,7 @@
                     <ul id="groups" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for name in group_name|slice:":10" %}
                         {% with param=name.0|urlencode %}
-                            <li><a href="{% doctor_filter_link "selected_facets=group_name_exact:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                            <li><a href="{% doctor_filter_link "selected_facets" "group_name_exact:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
                         {% endwith %}
                     {% endfor %}
                     </ul>
@@ -76,7 +76,7 @@
                     <ul id="sectors" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                     {% for name in sectors %}
                         {% with param=name.0|urlencode %}
-                            <li><a href="{% doctor_filter_link "selected_facets=sectors:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                            <li><a href="{% doctor_filter_link "selected_facets" "sectors:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
                         {% endwith %}
                     {% endfor %}
                     </ul>
@@ -90,7 +90,7 @@
                     <ul id="access_type" data-dropdown-content class="f-dropdown" role="menu" aria-hidden="false" tabindex="-1">
                   {% for name in access_type %}
                       {% with param=name.0|urlencode %}
-                          <li><a href="{% doctor_filter_link "selected_facets=access_type:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
+                          <li><a href="{% doctor_filter_link "selected_facets" "access_type:"|add:param %}">{{ name.0 }} <strong>({{ name.1 }})</strong></a></li>
                       {% endwith %}
                   {% endfor %}
                     </ul>
