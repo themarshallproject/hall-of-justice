@@ -1,48 +1,65 @@
-<!DOCTYPE html>{% load static from staticfiles %}
-<html lang="en-US">
-  <head>
+<!doctype html>{% load static from staticfiles %}
+<html class="bb_wrapper no-js" lang="en-US">
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hall of Justice - Sunlight Foundation</title>
-    <!-- <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
-    <script src="{% static "js/vendor/modernizr.js" %}"></script> -->
-    <link rel="stylesheet" type="text/css" href="{% static "css/hoj.css" %}">
+    <title>Hall of Justice</title>
+    <script src="https://use.typekit.net/evg6yrh.js"></script>
+<script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/site.css" %}">
+    <link rel="stylesheet" type="text/css" href="https://sunlight-cdn.s3.amazonaws.com/brandingbar/0.4/css/brandingbar.css" />
+    <link rel="stylesheet" type="text/css" href="https://sunlight-cdn.s3.amazonaws.com/sf-icons/0.4/css/sf-icons.css" />
     {% block extrahead %}{% endblock extrahead %}
+<style>
+.contain-to-grid{background-color:transparent; color:#000 !important}
+.top-bar,.top-bar-section .has-form,.top-bar-section,.top-bar-section ul li,.top-bar-section ul li a,.top-bar-section ul.left,.top-bar-section ul.left li.has-dropdown{background-color:transparent; color:#000;}
+section.top-bar-section,section.top-bar-section ul.left,section.top-bar-section ul.left li.has-dropdown.not-click{background-color:transparent !important}
+.top-bar-section ul li::not(.has-form) a{background-color:transparent !important; color:#000 !important;}
+.top-bar-section ul li:hover:not(.has-form) > a{background-color:transparent !important; color:#000 !important;}
+.top-bar-section li:not(.has-form) a:not(.button) {background-color:transparent !important; color:#000 !important}
+
+.contain-to-grid .top-bar .title-area .name h1 a{color:#000 !important;}
+.postfix.button{background-color:#06686d !important; color:#fff !important;}
+.top-bar-section .has-dropdown > a:after{border-color:#fff !important; border:none !important;}
+.contain-to-grid{margin-bottom:1em;}
+input#id_q{background-color:#e4eded !important; color:#586c71 !important;}
+.contain-to-grid{background:url("https://sunlight-assets.s3.amazonaws.com/academy/sfapp/img/sfapp_bg.jpg")}
+
+.top-bar{height:150px; padding-top:10px !important; padding-bottom:10px !important;}
+.top-bar .title-area,.top-bar .title-area li,.top-bar .title-area h1{height:100% !important;}
+.top-bar .title-area h1 a{height:100% !important; display:block; line-height:130px !important; font-size:40px !important;}
+.top-bar h1{}
+.tk-azo-sans-web{}
+section.top-bar-section ul.right{margin-top:40px;}
+.row.footer-row{width:100% !important;}
+.footer,.footer-row,.footer-columns{background-color:#e4eded !important;}
+.footer{padding-bottom:2em !important;}
+</style>
 </head>
 
-  <body>
-    <div class="content">
-      <header>
-        <h1><a href="{% url 'index' %}">Hall <b class="">of</b> Justice</a></h1>
-
-<nav>
-  <ul>
-    <li>Locations
-      <ul class="sub-ul">
-        <li><a href=""></a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-      </header>
-      <main>
- 
-      
-      
-
-      
-      
+<body>
+<div class="branding-bar" data-bb-brandingbar="true" data-bb-property-id="hoj"></div>
     <div class="contain-to-grid">
         <nav class="top-bar" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
-                
+                <h1><a href="{% url 'index' %}" class="tk-azo-sans-web">HALL <b class="">of</b> JUSTICE</a></h1>
                 </li>
             </ul>
             <section class="top-bar-section">
-                <ul class="left">
+                <ul class="right">
                     <li class="has-dropdown">
-                        <a href="#">Categories</a>
+                        <a href="#">LOCATIONS</a>
+                        <ul class="dropdown">{% for item in state_choices %}
+                            <li {% if item.children %}class="has-dropdown"{% endif %}>
+                                <a href="{% url 'datasets-by-location' location=item.0|lower %}">{{ item.1 }}</a>
+                            </li>{% endfor %}
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="#">CATEGORIES</a>
                         <ul class="dropdown">{% for item in main_categories.all %}
                             <li {% if item.children %}class="has-dropdown"{% endif %}>
                                 <a href="{% url 'datasets-by-category' category=item.name|slugify %}">{{ item.name }}</a>
@@ -56,18 +73,6 @@
                             </li>{% endfor %}
                         </ul>
                     </li>
-                    <li class="divider"></li>
-                    <li class="has-form">
-                        <select id="state-select" name="state">
-                            <option value="" {% if not location_abbr %}selected{% endif %}>-- View Location --</option>
-                        {% for item in state_choices %}
-                            <option {% ifequal item.0 location_abbr %}selected{% endifequal %}
-                            value="{% url 'datasets-by-location' location=item.0|lower %}">{{ item.1 }}</option>
-                        {% endfor %}
-                        </select>
-                    </li>
-                    <li class="divider"></li>
-                    <li class="has-form"><a class="button" href="{% url 'haystack_search' %}">Search Page</a></li>
                 </ul>
             </section>
         </nav>
@@ -80,7 +85,11 @@
             <div class="columns large-12">{% block content %}{% endblock %}</div>
         </div>
     </section>
-
+    <div class="row footer-row">
+        <div class="small-12 columns footer-columns">
+            {% include "footer.html" %}
+        </div>
+    </div>
     <script src="{% static "js/vendor/jquery.js" %}"></script>
     <script src="{% static "js/foundation.min.js" %}"></script>
     {% block jslibs %}{% endblock jslibs %}
@@ -101,7 +110,30 @@
             });
         });
     </script>
+     <!--   <script src="http://static.openstates.org/assets/v3.1/js/jquery-1.9.0.min.js"></script> -->
+    <script src="http://static.openstates.org/assets/v3.1/js/d3.v3.min.js"></script>
+<script>
+    var blue = '#75afa5';
+    var green = '#a5b765';
+    $(function() {
+        /* add a mouseover handler for each g */
+        d3.selectAll('g')
+        //.each(function() { if(!this.id) { console.log(this);}  } )
+        .on("mouseover", function() {
+            d3.select(this).selectAll('stop').style('stop-color', blue);
+        })
+        .on("mouseout", function() {
+            d3.select(this).selectAll('stop').style('stop-color', green);
+        })
+        .on("click", function() {
+            if(this.id.length == 2) {
+                document.location = '/location/' + this.id + '/';
+            }
+        });
+    });
+</script>
     {% block js %}{% endblock js %}
+    <script src="https://sunlight-cdn.s3.amazonaws.com/brandingbar/0.4/js/brandingbar.min.js.gz"></script>
 </body>
 
 </html>
