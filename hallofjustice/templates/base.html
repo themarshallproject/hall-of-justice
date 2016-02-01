@@ -13,6 +13,18 @@
     <link rel="stylesheet" type="text/css" href="https://sunlight-cdn.s3.amazonaws.com/sf-icons/0.4/css/sf-icons.css" />
     {% block extrahead %}{% endblock extrahead %}
 <style>
+
+::-webkit-scrollbar {
+   -webkit-appearance: none;
+   width: 7px;
+}
+::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(0,0,0,.5);
+   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+ul.dropdown-states{height: 500px !important;
+   overflow: scroll !important;}
 .contain-to-grid{background-color:transparent; color:#000 !important}
 .top-bar,.top-bar-section .has-form,.top-bar-section,.top-bar-section ul li,.top-bar-section ul li a,.top-bar-section ul.left,.top-bar-section ul.left li.has-dropdown{background-color:transparent; color:#000;}
 section.top-bar-section,section.top-bar-section ul.left,section.top-bar-section ul.left li.has-dropdown.not-click{background-color:transparent !important}
@@ -89,7 +101,6 @@ nav .top-bar-section .right li.has-dropdown a{font-family:"azo-sans-web"; color:
 body{max-height:1500px !important;}
 *{margin:0;
 }
-.page-wrap{min-height:100%; height:auto !important; height:100%; margin:0 auto -323px;}
 .footer, .push{height:323px !important;}
 
 </style>
@@ -110,7 +121,7 @@ body{max-height:1500px !important;}
                 <ul class="right">
                     <li class="has-dropdown">
                         <a href="#">LOCATIONS</a>
-                        <ul class="dropdown">{% for item in state_choices %}
+                        <ul class="dropdown dropdown-states">{% for item in state_choices %}
                             <li {% if item.children %}class="has-dropdown"{% endif %}>
                                 <a href="{% url 'datasets-by-location' location=item.0|lower %}">{{ item.1 }}</a>
                             </li>{% endfor %}
