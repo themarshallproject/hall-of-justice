@@ -6,16 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
 {% endblock extrahead %}
 
-{% block pageheader %}
-    <h1>Search</h1>
-{% endblock pageheader %}
 
 {% block content %}{% load highlight %}
-    <div class="row">
-        <div class="columns large-12">
-            {% include "search/_search_form.html" %}
-        </div>
-    </div>
     {% if selected_facets %}
     <div class="row">
         <div class="columns large-12">
@@ -32,7 +24,7 @@
     <div class="row">
         {% if query %}
         <div class="columns large-2">
-            <a href="{% if form.q.value %}{% else %}#{% endif %}{% url 'search_export' %}?q={{ form.q.value|default:"" }}{% for facet in form.selected_facets %}&amp;selected_facets={{ facet }}{% endfor %}{% if form.parse_query.value %}&amp;parse_query=True{% endif %}" class="button small secondary {% if not form.q.value %}disabled{% endif %}">Export Data</a>
+            
 
             <h4>Filter by</h4>
             <ul class="stack button-group">
@@ -88,6 +80,7 @@
             </ul>
         </div>
         <div class="columns large-10">
+         <a href="{% if form.q.value %}{% else %}#{% endif %}{% url 'search_export' %}?q={{ form.q.value|default:"" }}{% for facet in form.selected_facets %}&amp;selected_facets={{ facet }}{% endfor %}{% if form.parse_query.value %}&amp;parse_query=True{% endif %}" class="export button small secondary {% if not form.q.value %}disabled{% endif %}">Export Data</a>
             <h3>Results</h3>
             {% include "cjdata/_pagination_links.html" with page_obj=page %}
             {% include "search/_results_table.html" with results_list=page.object_list %}

@@ -12,9 +12,9 @@
         {% endspaceless %}</h1>
         {% if object_list %}
             {% if category %}
-                <a href="{% url 'datasets-by-category-export' category.slugged_path.lower %}" class="button small secondary">Export Data</a>
+                <a href="{% url 'datasets-by-category-export' category.slugged_path.lower %}" class="export button small secondary">Export Data</a>
             {% elif location %}
-                <a href="{% url 'datasets-by-location-export' location_abbr.lower %}" class="button small secondary">Export Data</a>
+                <a href="{% url 'datasets-by-location-export' location_abbr.lower %}" class="export button small secondary">Export Data</a>
             {% endif %}
         {% endif %}
 {% endblock pageheader %}
