@@ -1,0 +1,87 @@
+<!doctype html>{% load static from staticfiles %}
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hall of Justice</title>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/site.css" %}">
+    {% block extrahead %}{% endblock extrahead %}
+</head>
+
+<body>
+    <div class="contain-to-grid">
+        <nav class="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                <h1><a href="{% url 'index' %}">Criminal Justice Data Prototype</a></h1>
+                </li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li class="has-dropdown">
+                        <a href="#">Categories</a>
+                        <ul class="dropdown">{% for item in main_categories.all %}
+                            <li {% if item.children %}class="has-dropdown"{% endif %}>
+                                <a href="{% url 'datasets-by-category' category=item.name|slugify %}">{{ item.name }}</a>
+                                {% if item.children %}
+                                    <ul class="dropdown">
+                                        {% for child in item.children.all %}
+                                        <li><a href="{% url 'datasets-by-category' category=item.name|slugify subcategory=child.name|slugify %}">{{ child.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>{% endfor %}
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-form">
+                        <select id="state-select" name="state">
+                            <option value="" {% if not location_abbr %}selected{% endif %}>-- View Location --</option>
+                        {% for item in state_choices %}
+                            <option {% ifequal item.0 location_abbr %}selected{% endifequal %}
+                            value="{% url 'datasets-by-location' location=item.0|lower %}">{{ item.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-form"><a class="button" href="{% url 'haystack_search' %}">Search Page</a></li>
+                </ul>
+            </section>
+        </nav>
+    </div>
+    <section role="main">
+        <div class="row">
+            <div class="columns large-12">{% block pageheader %}{% endblock %}</div>
+        </div>
+        <div class="row">
+            <div class="columns large-12">{% block content %}{% endblock %}</div>
+        </div>
+    </section>
+
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/foundation.min.js" %}"></script>
+    {% block jslibs %}{% endblock jslibs %}
+    <script type="text/javascript">
+        $(document).foundation();
+    </script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('nav').on('change', '#state-select', function(event) {
+                console.log(event);
+                var selection = $(this).children(':selected').first();
+                if (selection) {
+                    var state_val = selection.val();
+                    if (state_val != "") {
+                        document.location = selection.val();
+                    };
+                };
+            });
+        });
+    </script>
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

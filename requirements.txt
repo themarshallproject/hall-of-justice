@@ -1,7 +1,7 @@
 pytz>=2015.2
 celery==3.1.18
 redis>=2.10.3
-Django>=1.8
+Django>=1.8,<1.9
 dj-database-url==0.3.0
 elasticsearch==1.4.0
 elasticstack==0.1.1

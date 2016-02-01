@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from localflavor.us.us_states import STATE_CHOICES
+from localflavor.us.us_states import US_STATES
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from common.models import TimestampedModel
 import uuid
 
-STATE_NATL_CHOICES = (('US', 'National'),) + STATE_CHOICES
+STATE_NATL_CHOICES = (('US', 'National'),) + US_STATES
 STATE_NATL_LOOKUP = dict(STATE_NATL_CHOICES)
+
 
 class Category(TimestampedModel):
     name = models.CharField(max_length=50)

@@ -1,0 +1,47 @@
+{% extends "base.html" %}{% load static from staticfiles %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.min.css" %}">
+{% endblock extrahead %}
+
+{% block pageheader %}
+    <h2>Sunlight Foundation Criminal Justice Data Prototype</h2>
+{% endblock pageheader %}
+
+{% block content %}
+    <div class="row">
+        <div class="small-12 columns">
+            {% include "search/_search_form.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns large-12">
+            <p>
+                Want to learn more? Check out our research <a href="https://docs.google.com/document/d/1ahy0AVpgd4hoVfufsx4QZIdCtmR217KRh_YWiQcIgZs/edit?usp=sharing">methodology</a>
+                and read more about the project <a href="http://sunlightfoundation.com/criminaljustice">here</a>.
+            </p>
+            <p>
+                Note: This tool is a prototype. If you experience any issues with site features, have no fear, we’re working on it!
+            </p>
+            <p>Not sure what to search for? Try browsing our categories.</p>
+            <h3>Main categories</h3>
+            <ul>{% for item in main_categories.all %}
+                <li>
+                    <a href="{% url 'datasets-by-category' category=item.name|slugify %}">{{ item.name }}</a>
+                </li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block jslibs %}
+<script src="{% static "js/jquery-ui.min.js" %}"></script>
+<script src="{% static "js/search.js" %}"></script>
+{% endblock jslibs %}
+{% block js %}
+<script type="text/javascript">
+var searchURL = '{% url "haystack_autocomplete" %}';
+</script>
+{% endblock js %}

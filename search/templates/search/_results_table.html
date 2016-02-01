@@ -24,7 +24,7 @@
         </td>
         <td>{{ result.object.group_name|default:"Not provided" }}</td>
         <td>{{ result.object.data_range|format_data_range }}</td>
-        <td><a data-tooltip aria-haspopup="true" class="has-tip" rel="external nofollow" target="_blank" title="{{ result.object.url }}" href="{{ result.object.url }}">Dataset URL</a></td>
+        <td><a data-tooltip aria-haspopup="true" class="has-tip" rel="external nofollow" target="_blank" title="{{ result.object.url }}" href="{{ result.object.url }}">Direct Link</a></td>
     </tr>
 {% empty %}
     <p>No results found.</p>
