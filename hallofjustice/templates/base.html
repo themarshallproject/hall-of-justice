@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hall of Justice</title>
+        <meta property="og:url"           content="https://hallofjustice.sunlightfoundation.com" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Hall of Justice" />
+    <meta property="og:description"   content="Dig through criminal justice data from across the U.S. with Hall of Justice from Sunlight Foundation." />
+    <!-- <meta property="og:image"         content="http://www.your-domain.com/path/image.jpg" /> -->
+
     <script src="https://use.typekit.net/evg6yrh.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
     <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
@@ -17,11 +23,13 @@
 ::-webkit-scrollbar {
    -webkit-appearance: none;
    width: 7px;
+   display:none;
 }
 ::-webkit-scrollbar-thumb {
    border-radius: 4px;
    background-color: rgba(0,0,0,.5);
    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+   display:none;
 }
 ul.dropdown-states{height: 500px !important;
    overflow: scroll !important;}
@@ -54,7 +62,7 @@ section.top-bar-section ul.right{margin-top:50px;}
 
 li.has-dropdown ul,li.has-dropdown li{background-color:#c4e4e4 !important;}
 li.has-dropdown li a:hover{font-weight:bold !important; background-color:#fff !important}
-
+#search{margin-left:10%;}
 #search input{height:50px; line-height:1.5; font-size:17px;}
 
 #svgmap{position:relative;}
@@ -69,7 +77,7 @@ svg:hover{cursor:pointer;}
 .index-main-bottom .x{color:#4a6067 !important}
 .index-main-bottom h3.x{font-size:35px !important; line-height:45px !important; margin-bottom:40px;}
 .index-main-bottom-half{width:47%; float:left;}
-.index-main-bottom-half p.x{padding:0 .75em; margin:0; font-size:15px; line-height:22px;}
+.index-main-bottom-half p.x{padding:0 .75em; margin:0 0 .5em 0; font-size:15px; line-height:22px;}
 .index-main-bottom-half p.x a{color:#06686d !important;}
 
 table.datasets-table thead th{background-color:#e4eded !important; }
@@ -107,6 +115,14 @@ body{max-height:1500px !important;}
 </head>
 
 <body>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
 <div class="page-wrap">
 <div class="branding-bar" data-bb-brandingbar="true" data-bb-property-id="hoj"></div>
 
