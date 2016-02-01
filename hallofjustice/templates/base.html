@@ -60,17 +60,27 @@ section.top-bar-section ul.right{margin-top:50px;}
 .footer,.footer-row,.footer-columns{background-color:#e4eded !important;}
 .footer{padding-bottom:2em !important;}
 
-
 li.has-dropdown ul,li.has-dropdown li{background-color:#c4e4e4 !important;}
 li.has-dropdown li a:hover{font-weight:bold !important; background-color:#fff !important}
 #search input{height:50px; line-height:1.5; font-size:17px;}
 
-#svgmap{position:relative;}
-.main-aside{position:absolute; top:0; right:0; width:200px;}
-.main-aside h3{font-size:15px; color:#4a6067 !important}
-.main-aside ul{list-style:none; padding:0; margin-left:0 !important;}
+#svgmap {
+    margin-top:35px;
+    margin-bottom:35px;
+}
+#svgmap:after{
+    clear:both;
+    content:" ";
+    display:block;
+}
+
+.main-aside{float:right;}
+.main-aside h3{font-size:15px; color:#4a6067 !important; font-weight:bold;}
+.main-aside ul{list-style:none; padding:0; margin-left:25px !important;}
 .main-aside li a{color:#4a6067 !important; text-decoration:underline;}
-#svgmap svg {width: 75%;}
+#svgmap svg {
+    float:left;
+}
 svg:hover{cursor:pointer;}
 
 .index-main-bottom{padding-bottom:50px;}
