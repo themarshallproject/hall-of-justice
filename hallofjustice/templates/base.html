@@ -62,7 +62,6 @@ section.top-bar-section ul.right{margin-top:50px;}
 
 li.has-dropdown ul,li.has-dropdown li{background-color:#c4e4e4 !important;}
 li.has-dropdown li a:hover{font-weight:bold !important; background-color:#fff !important}
-#search{margin-left:10%;}
 #search input{height:50px; line-height:1.5; font-size:17px;}
 
 #svgmap{position:relative;}
@@ -242,6 +241,9 @@ body{max-height:1500px !important;}
 <script>
 $(document).ready(function () {
   $("tbody tr:nth-child(odd)").addClass("stripe");
+  if (window.location.pathname!='/') {
+    $('#search').css('margin-left','10%');
+  }
 });
 </script>
     {% block js %}{% endblock js %}
