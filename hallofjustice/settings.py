@@ -58,14 +58,27 @@ INSTALLED_APPS = (
 AUTHENTICATION_MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware'
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 )
 
 COMPRESSION_MIDDLEWARE = (
     'django.middleware.gzip.GZipMiddleware',
 )
 
-MIDDLEWARE_CLASSES = COMPRESSION_MIDDLEWARE + MC + AUTHENTICATION_MIDDLEWARE + (
+MESSAGING_MIDDLEWARE = (
+    'django.contrib.messages.middleware.MessageMiddleware',
+)
+
+CSRF_MIDDLEWARE = (
+    'django.middleware.csrf.CsrfViewMiddleware',
+)
+
+COMMON_MIDDLEWARE = (
+    'django.middleware.common.CommonMiddleware',
+)
+
+MIDDLEWARE_CLASSES = COMPRESSION_MIDDLEWARE + COMMON_MIDDLEWARE + CSRF_MIDDLEWARE +\
+                     AUTHENTICATION_MIDDLEWARE + MESSAGING_MIDDLEWARE + (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 

@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.conf import settings
 
 urlpatterns = patterns('',
-
     url(r'^', include('cjdata.urls')),
     url(r'^reports/', include('crawler.urls')),
 
