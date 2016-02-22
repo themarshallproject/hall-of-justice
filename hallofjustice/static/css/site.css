@@ -2,21 +2,23 @@ table {
     width: 100%;
 }
 .highlighted {
-    font-weight: 1000;
+    /** 1000 is not a valid css font-weight style declaration value **/
+    /** font-weight: 1000; **/
+    font-weight:900;
 }
 #results > li {
-    border-bottom: 2px solid #EEEEEE;
+    border-bottom: 2px solid #eee;
     padding-bottom: 6px;
     margin-bottom: 10px;
 }
 .ui-autocomplete {
-    background: #FFFFFF;
-    border: solid 1px #cccccc;
+    background-color: #fff;
+    border: solid 1px #ccc;
     font-size: 0.875rem;
 }
 .ui-state-focus {
-    border-left: solid 1px #cccccc;
-    border-right: solid 1px #cccccc;
-    background: #EEEEEE;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    background-color: #eee;
 }
-.contain-to-grid{background-color:#fff;}
+.contain-to-grid{background-color:#fff}
