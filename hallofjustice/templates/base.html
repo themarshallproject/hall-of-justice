@@ -123,8 +123,19 @@ nav .top-bar-section .right li.has-dropdown a{font-family:"azo-sans-web"; color:
 
 
 body{max-height:1500px !important;}
-*{margin:0;
-}
+*{margin:0}
+
+
+/** placeholder input content **/
+input:focus::-webkit-input-placeholder { color:transparent; } /** chrome/opera **/
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+/** dropdown menu hover action **/
+.top-bar-section .dropdown li:not(.has-form):not(.active):hover > a:not(.button) {
+color:#000 !important; text-decoration:underline;}
+
 
 @media screen and (max-width: 480px) {
     .main-aside {
