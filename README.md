@@ -1,6 +1,5 @@
-# hall-of-justice
-
-Working with criminal justice data.
+# Hall of Justice  
+[Hall of Justice](http://hallofjustice.sunlightfoundation.com/) is a Sunlight Foundation Project working with criminal justice data. [Hall of Justice was on Heroku while in development](http://hall-of-justice.herokuapp.com/)  
 
 ## Setup
 
