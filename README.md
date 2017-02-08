@@ -1,5 +1,5 @@
-# Hall of Justice  
-[Hall of Justice](http://hallofjustice.sunlightfoundation.com/) is a Sunlight Foundation Project working with criminal justice data. [Hall of Justice was on Heroku while in development](http://hall-of-justice.herokuapp.com/)  
+# Hall of Justice
+[Hall of Justice](http://hallofjustice.sunlightfoundation.com/) is a Sunlight Foundation Project working with criminal justice data. [Hall of Justice was on Heroku while in development](http://hall-of-justice.herokuapp.com/)
 
 ## Setup
 
@@ -16,6 +16,17 @@ Once you've imported data into the database, you should create (or recreate) the
 There is a Vagrantfile for setting up multiple Virtualbox virtual machines and provisioning them using [Ansible](http://docs.ansible.com). You should be able to run `vagrant up` to create the machines after fetching the required git submodules. You'll need to run the setup steps above to populate the data.
 
 Further information is available in NOTES.md.
+
+### Front end development
+
+If all you need to do is work on the front end of the website you can follow this process:
+
+- Create a virtual env for the project (optional)
+- Create a file in the root of the project called `.env`, see `example-env` for an example of what this should contain.
+- Run `pip install python-dotenv`
+- Run `python manage.py runserver`
+
+You should be all set.
 
 ## Feature Notes
 

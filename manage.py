@@ -6,7 +6,7 @@ if __name__ == "__main__":
 
     try:
         import dotenv
-        dotenv.read_dotenv()
+        dotenv.load_dotenv(dotenv.find_dotenv())
     except Exception:
         pass
 
