@@ -1,9 +1,7 @@
 # Hall of Justice
-[Hall of Justice](http://hallofjustice.sunlightfoundation.com/) is a Sunlight Foundation Project working with criminal justice data. [Hall of Justice was on Heroku while in development](http://hall-of-justice.herokuapp.com/)
+[Hall of Justice](http://hallofjustice.sunlightfoundation.com/) is a Sunlight Foundation Project working with criminal justice data. The project is no longer maintained, but you can find the archived underlying data set here: https://docs.google.com/spreadsheets/d/1e4VMZ2zySEW4PK049WBlaJQJT8Y4KCZpBZK_8xDQ9Ng/edit?usp=sharing.
 
 ## Setup
-
-*A work in progress. The set up will almost certainly change in the near future.*
 
 You can take a properly formatted (fits the data schema) xlsx file and collapse it to a single csv using `scripts/collapse_xls_to_csv.py`. This csv can be imported into a Django database (already created using `python manage.py migrate`) using the *import_datasets* management command, i.e.: `python manage.py import_datasets /path/to/data.csv -v 3 2> import_errors.log`.
 
